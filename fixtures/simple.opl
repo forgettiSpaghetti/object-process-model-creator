@@ -1,0 +1,14 @@
+Bread is a physical and systemic object.
+Bread can be raw or baked.
+State raw is initial.
+State baked is final.
+Flour is a physical and environmental object.
+Water is a physical and environmental object.
+Yeast is a physical and environmental object.
+Baking is an informatical and systemic process.
+Mixing is an informatical and systemic process.
+Bread consists of Flour, Water, and Yeast.
+Mixing requires Flour.
+Mixing requires Water.
+Baking changes Bread from raw to baked.
+Baking invokes Mixing.

@@ -1,0 +1,27 @@
+node_modules/
+dist/
+
+# Generated outputs (keep simple.* as examples)
+fixtures/daf.*
+fixtures/*.svg
+!fixtures/simple.yaml
+!fixtures/simple.opl
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Env
+.env
+.env.*
+
+# Logs
+*.log
+npm-debug.log*

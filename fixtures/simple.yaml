@@ -1,0 +1,77 @@
+entities:
+  - id: bread
+    entityType: object
+    name: Bread
+    essence: physical
+    affiliation: systemic
+    states:
+      - name: raw
+        initial: true
+      - name: baked
+        final: true
+
+  - id: flour
+    entityType: object
+    name: Flour
+    essence: physical
+    affiliation: environmental
+
+  - id: water
+    entityType: object
+    name: Water
+    essence: physical
+    affiliation: environmental
+
+  - id: yeast
+    entityType: object
+    name: Yeast
+    essence: physical
+    affiliation: environmental
+
+  - id: baking
+    entityType: process
+    name: Baking
+    essence: informatical
+    affiliation: systemic
+
+  - id: mixing
+    entityType: process
+    name: Mixing
+    essence: informatical
+    affiliation: systemic
+
+relationships:
+  - id: r1
+    subject: { subjectId: bread }
+    target: { targetId: flour }
+    relationship: consists of
+
+  - id: r2
+    subject: { subjectId: bread }
+    target: { targetId: water }
+    relationship: consists of
+
+  - id: r3
+    subject: { subjectId: bread }
+    target: { targetId: yeast }
+    relationship: consists of
+
+  - id: r4
+    subject: { subjectId: mixing }
+    target: { targetId: flour }
+    relationship: requires
+
+  - id: r5
+    subject: { subjectId: mixing }
+    target: { targetId: water }
+    relationship: requires
+
+  - id: r6
+    subject: { subjectId: baking }
+    target: { targetId: bread, targetState: { targetStateFrom: raw, targetStateTo: baked } }
+    relationship: changes
+
+  - id: r7
+    subject: { subjectId: baking }
+    target: { targetId: mixing }
+    relationship: invokes
