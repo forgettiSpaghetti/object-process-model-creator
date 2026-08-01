@@ -63,8 +63,8 @@ entities:
 
 relationships:
   - id: r1
-    subject: { subjectId: bread }
-    target: { targetId: flour }
+    subject: { subjectId: bread } # subject of the OPL sentence
+    target: { targetId: flour } # target (linguistic object) of the sentence
     relationship: consists of
 
   - id: r2
@@ -183,6 +183,39 @@ After configuring the MCP server, you can say to Claude:
 
 Claude will call the `render_opd` tool and return the SVG and OPL sentences.
 
+## Dogfooding
+
+The renderer can describe its own pipeline. Run `node dist/cli.js fixtures/self.yaml` to render the self-model:
+
+![Self-model OPD](fixtures/self.svg)
+
+```
+YAML File is an informatical and environmental object.
+OPM Model is an informatical and systemic object.
+OPM Model can be raw or validated.
+State raw is initial.
+State validated is final.
+ELK Layout is an informatical and systemic object.
+SVG Diagram is an informatical and systemic object.
+OPL Sentences is an informatical and systemic object.
+Parsing is an informatical and systemic process.
+Validating is an informatical and systemic process.
+Laying Out is an informatical and systemic process.
+Rendering is an informatical and systemic process.
+Generating OPL is an informatical and systemic process.
+Parsing requires YAML File.
+Parsing yields OPM Model at state raw.
+Validating changes OPM Model from raw to validated.
+Laying Out requires OPM Model at state validated.
+Laying Out yields ELK Layout.
+Rendering requires ELK Layout.
+Rendering yields SVG Diagram.
+Generating OPL requires OPM Model at state validated.
+Generating OPL yields OPL Sentences.
+Parsing invokes Validating.
+Laying Out invokes Rendering.
+```
+
 ## Project structure
 
 ```
@@ -201,7 +234,7 @@ src/
 └── index.ts          # Library exports
 fixtures/
 ├── simple.yaml       # Bread model (6 entities, 7 relationships)
-└── daf.yaml          # DAF model (12 entities, 32 relationships)
+└── self.yaml         # Self-describing model of this renderer's pipeline
 ```
 
 ### Pipeline

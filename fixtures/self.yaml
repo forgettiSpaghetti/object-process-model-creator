@@ -1,0 +1,121 @@
+entities:
+  - id: yaml-file
+    entityType: object
+    name: YAML File
+    essence: informatical
+    affiliation: environmental
+
+  - id: opm-model
+    entityType: object
+    name: OPM Model
+    essence: informatical
+    affiliation: systemic
+    states:
+      - name: raw
+        initial: true
+      - name: validated
+        final: true
+
+  - id: elk-layout
+    entityType: object
+    name: ELK Layout
+    essence: informatical
+    affiliation: systemic
+
+  - id: svg-diagram
+    entityType: object
+    name: SVG Diagram
+    essence: informatical
+    affiliation: systemic
+
+  - id: opl-sentences
+    entityType: object
+    name: OPL Sentences
+    essence: informatical
+    affiliation: systemic
+
+  - id: parsing
+    entityType: process
+    name: Parsing
+    essence: informatical
+    affiliation: systemic
+
+  - id: validating
+    entityType: process
+    name: Validating
+    essence: informatical
+    affiliation: systemic
+
+  - id: laying-out
+    entityType: process
+    name: Laying Out
+    essence: informatical
+    affiliation: systemic
+
+  - id: rendering
+    entityType: process
+    name: Rendering
+    essence: informatical
+    affiliation: systemic
+
+  - id: generating-opl
+    entityType: process
+    name: Generating OPL
+    essence: informatical
+    affiliation: systemic
+
+relationships:
+  - id: r1
+    subject: { subjectId: parsing }
+    target: { targetId: yaml-file }
+    relationship: requires
+
+  - id: r2
+    subject: { subjectId: parsing }
+    target: { targetId: opm-model, targetState: { targetStateAt: raw } }
+    relationship: yields
+
+  - id: r3
+    subject: { subjectId: validating }
+    target: { targetId: opm-model, targetState: { targetStateFrom: raw, targetStateTo: validated } }
+    relationship: changes
+
+  - id: r4
+    subject: { subjectId: laying-out }
+    target: { targetId: opm-model, targetState: { targetStateAt: validated } }
+    relationship: requires
+
+  - id: r5
+    subject: { subjectId: laying-out }
+    target: { targetId: elk-layout }
+    relationship: yields
+
+  - id: r6
+    subject: { subjectId: rendering }
+    target: { targetId: elk-layout }
+    relationship: requires
+
+  - id: r7
+    subject: { subjectId: rendering }
+    target: { targetId: svg-diagram }
+    relationship: yields
+
+  - id: r8
+    subject: { subjectId: generating-opl }
+    target: { targetId: opm-model, targetState: { targetStateAt: validated } }
+    relationship: requires
+
+  - id: r9
+    subject: { subjectId: generating-opl }
+    target: { targetId: opl-sentences }
+    relationship: yields
+
+  - id: r10
+    subject: { subjectId: parsing }
+    target: { targetId: validating }
+    relationship: invokes
+
+  - id: r11
+    subject: { subjectId: laying-out }
+    target: { targetId: rendering }
+    relationship: invokes

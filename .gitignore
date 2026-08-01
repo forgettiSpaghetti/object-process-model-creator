@@ -1,11 +1,14 @@
 node_modules/
 dist/
 
-# Generated outputs (keep simple.* as examples)
+# Generated outputs (keep simple.* and self.* as examples)
 fixtures/daf.*
 fixtures/*.svg
+!fixtures/self.svg
 !fixtures/simple.yaml
 !fixtures/simple.opl
+!fixtures/self.yaml
+!fixtures/self.opl
 
 # OS
 .DS_Store

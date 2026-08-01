@@ -1,0 +1,24 @@
+YAML File is an informatical and environmental object.
+OPM Model is an informatical and systemic object.
+OPM Model can be raw or validated.
+State raw is initial.
+State validated is final.
+ELK Layout is an informatical and systemic object.
+SVG Diagram is an informatical and systemic object.
+OPL Sentences is an informatical and systemic object.
+Parsing is an informatical and systemic process.
+Validating is an informatical and systemic process.
+Laying Out is an informatical and systemic process.
+Rendering is an informatical and systemic process.
+Generating OPL is an informatical and systemic process.
+Parsing requires YAML File.
+Parsing yields OPM Model at state raw.
+Validating changes OPM Model from raw to validated.
+Laying Out requires OPM Model at state validated.
+Laying Out yields ELK Layout.
+Rendering requires ELK Layout.
+Rendering yields SVG Diagram.
+Generating OPL requires OPM Model at state validated.
+Generating OPL yields OPL Sentences.
+Parsing invokes Validating.
+Laying Out invokes Rendering.
