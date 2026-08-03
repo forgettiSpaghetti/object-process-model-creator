@@ -1,65 +1,7 @@
 entities:
-  # Objects — all physical; systemic unless noted
-  - id: trap
-    entityType: object
-    name: Trap
-    essence: physical
-    affiliation: systemic
-    states:
-      - name: set
-      - name: sprung
-        initial: true
-
-  - id: base
-    entityType: object
-    name: Base
-    essence: physical
-    affiliation: systemic
-
-  - id: jaw
-    entityType: object
-    name: Jaw
-    essence: physical
-    affiliation: systemic
-    states:
-      - name: held back
-      - name: released
-
-  - id: transverse-spring
-    entityType: object
-    name: Transverse Spring
-    essence: physical
-    affiliation: systemic
-
-  - id: locking-bar
-    entityType: object
-    name: Locking Bar
-    essence: physical
-    affiliation: systemic
-    states:
-      - name: engaged
-      - name: disengaged
-
-  - id: trigger
-    entityType: object
-    name: Trigger
-    essence: physical
-    affiliation: systemic
-    states:
-      - name: at rest
-        initial: true
-      - name: pressed
-
-  - id: animal
-    entityType: object
-    name: Animal
-    essence: physical
-    affiliation: environmental
-    states:
-      - name: free
-        initial: true
-      - name: caught
-        final: true
+  # ---- Declared in causal/temporal order: setting the trap, then the
+  # catch sequence, so YAML order gives the layout engine a sequencing hint
+  # that roughly matches how the mechanism actually plays out. ----
 
   - id: operator
     entityType: object
@@ -67,16 +9,9 @@ entities:
     essence: physical
     affiliation: environmental
 
-# ---- Top-level processes ----
   - id: setting
     entityType: process
     name: Setting
-    essence: physical
-    affiliation: systemic
-
-  - id: springing
-    entityType: process
-    name: Springing
     essence: physical
     affiliation: systemic
 
@@ -96,90 +31,111 @@ entities:
     entityType: process
     name: Forcing
     essence: physical
-    affiliation: systemic
-
+    affiliation: systemic  
+ 
   - id: catching
     entityType: process
     name: Catching
     essence: physical
     affiliation: systemic
 
+  - id: trap
+    entityType: object
+    name: Trap
+    essence: physical
+    affiliation: systemic
+    states:
+      - name: set
+      - name: sprung
+        initial: true
+
+  - id: base
+    entityType: object
+    name: Base
+    essence: physical
+    affiliation: systemic
+
+  - id: animal
+    entityType: object
+    name: Animal
+    essence: physical
+    affiliation: environmental
+    states:
+      - name: free
+        initial: true
+      - name: caught
+        final: true
+
+  - id: trigger
+    entityType: object
+    name: Trigger
+    essence: physical
+    affiliation: systemic
+    states:
+      - name: at rest
+        initial: true
+      - name: pressed
+
+
+
+  - id: locking-bar
+    entityType: object
+    name: Locking Bar
+    essence: physical
+    affiliation: systemic
+    states:
+      - name: engaged
+      - name: disengaged
+
+  - id: transverse-spring
+    entityType: object
+    name: Transverse Spring
+    essence: physical
+    affiliation: systemic
+
+  - id: jaw
+    entityType: object
+    name: Jaw
+    essence: physical
+    affiliation: systemic
+    states:
+      - name: held back
+      - name: released
+
 relationships:
-  # ---- Aggregation — Trap (systemic parts only) ----
-  - id: agg1
-    subject: { subjectId: trap }
-    target: { targetId: base }
-    relationship: consists of
-
-  - id: agg2
-    subject: { subjectId: trap }
-    target: { targetId: jaw }
-    relationship: consists of
-
-  - id: agg3
-    subject: { subjectId: trap }
-    target: { targetId: transverse-spring }
-    relationship: consists of
-
-  - id: agg4
-    subject: { subjectId: trap }
-    target: { targetId: locking-bar }
-    relationship: consists of
-
-  - id: agg5
-    subject: { subjectId: trap }
-    target: { targetId: trigger }
-    relationship: consists of
-
-  # ---- Agent links (handles) ----
+  # ---- Setting the trap ----
   - id: pr1
     subject: { subjectId: operator }
     target: { targetId: setting }
     relationship: handles
 
+  - id: eff1
+    subject: { subjectId: setting }
+    target: { targetId: trap, targetState: { targetStateFrom: sprung, targetStateTo: set } }
+    relationship: changes
+
+  # ---- Animal presses the trigger ----
   - id: pr2
     subject: { subjectId: animal }
     target: { targetId: pressing }
     relationship: handles
 
-  # ---- Invocation chain (replaces zoom + initiates) ----
-  - id: inv1
-    subject: { subjectId: pressing }
-    target: { targetId: disengaging }
-    relationship: invokes
-
-  - id: inv2
-    subject: { subjectId: disengaging }
-    target: { targetId: forcing }
-    relationship: invokes
-
-  - id: inv3
-    subject: { subjectId: forcing }
-    target: { targetId: catching }
-    relationship: invokes
-
-  # ---- Instrument links (requires) ----
   - id: req1
     subject: { subjectId: pressing }
     target: { targetId: trigger }
     relationship: requires
-
-  - id: req2
-    subject: { subjectId: forcing }
-    target: { targetId: transverse-spring }
-    relationship: requires
-
-  # ---- Effect links (changes) ----
-  - id: eff1
-    subject: { subjectId: setting }
-    target: { targetId: trap, targetState: { targetStateFrom: sprung, targetStateTo: set } }
-    relationship: changes
 
   - id: eff2
     subject: { subjectId: pressing }
     target: { targetId: trigger, targetState: { targetStateFrom: at rest, targetStateTo: pressed } }
     relationship: changes
 
+  - id: inv1
+    subject: { subjectId: pressing }
+    target: { targetId: disengaging }
+    relationship: invokes
+
+  # ---- Locking bar disengages, trap springs ----
   - id: eff3
     subject: { subjectId: disengaging }
     target: { targetId: locking-bar, targetState: { targetStateFrom: engaged, targetStateTo: disengaged } }
@@ -190,12 +146,57 @@ relationships:
     target: { targetId: trap, targetState: { targetStateFrom: set, targetStateTo: sprung } }
     relationship: changes
 
+  - id: inv2
+    subject: { subjectId: disengaging }
+    target: { targetId: forcing }
+    relationship: invokes
+
+  # ---- Spring forces the jaw closed ----
+  - id: req2
+    subject: { subjectId: forcing }
+    target: { targetId: transverse-spring }
+    relationship: requires
+
   - id: eff5
     subject: { subjectId: forcing }
     target: { targetId: jaw, targetState: { targetStateFrom: held back, targetStateTo: released } }
     relationship: changes
 
+  - id: inv3
+    subject: { subjectId: forcing }
+    target: { targetId: catching }
+    relationship: invokes
+
+  # ---- Animal is caught ----
   - id: eff6
     subject: { subjectId: catching }
     target: { targetId: animal, targetState: { targetStateFrom: free, targetStateTo: caught } }
     relationship: changes
+
+  # ---- Aggregation — Trap (systemic parts only) ----
+  # Stack order follows declaration order here (used by Pressing first,
+  # then Disengaging, then Forcing, then whatever's left).
+  - id: agg5
+    subject: { subjectId: trap }
+    target: { targetId: trigger }
+    relationship: consists of
+
+  - id: agg4
+    subject: { subjectId: trap }
+    target: { targetId: locking-bar }
+    relationship: consists of
+
+  - id: agg3
+    subject: { subjectId: trap }
+    target: { targetId: transverse-spring }
+    relationship: consists of
+
+  - id: agg2
+    subject: { subjectId: trap }
+    target: { targetId: jaw }
+    relationship: consists of
+
+  - id: agg1
+    subject: { subjectId: trap }
+    target: { targetId: base }
+    relationship: consists of

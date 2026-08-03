@@ -23,44 +23,48 @@
     markerWidth="8" markerHeight="8" orient="auto">
     <path d="M 0 0 L 10 5 L 0 10 z" fill="white" stroke="#333" stroke-width="1.5"/>
   </marker>
+  <marker id="invoke-chevrons" viewBox="0 0 13 10" refX="13" refY="5"
+    markerWidth="11" markerHeight="8.5" orient="auto">
+    <path d="M 0 0 L 5 5 L 0 10 M 7 0 L 12 5 L 7 10" fill="none" stroke="#333" stroke-width="1.5"/>
+  </marker>
 </defs>
 <g transform="translate(40, 40)">
-<rect x="272" y="152" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2" stroke-dasharray="8,4"/>
-<text x="352" y="172" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">YAML File</text>
-<rect x="420" y="292" width="250" height="90" fill="white" stroke="#70E483" stroke-width="2"/>
-<text x="545" y="312" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">OPM Model</text>
-<rect x="430" y="332" width="100" height="30" rx="8" ry="8" fill="white" stroke="#70E483" stroke-width="3"/>
-<text x="480" y="352" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#333">raw</text>
-<rect x="540" y="332" width="100" height="30" rx="8" ry="8" fill="white" stroke="#70E483" stroke-width="1.5"/>
-<rect x="543" y="335" width="94" height="24" rx="6" ry="6" fill="none" stroke="#70E483" stroke-width="1"/>
-<text x="590" y="352" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#333">validated</text>
-<rect x="739" y="492" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2"/>
-<text x="819" y="512" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">ELK Layout</text>
-<rect x="959" y="492" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2"/>
-<text x="1039" y="512" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">SVG Diagram</text>
-<rect x="12" y="352" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2"/>
-<text x="92" y="372" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">OPL Sentences</text>
-<ellipse cx="275" cy="42" rx="80" ry="30" fill="white" stroke="#3BC3FF" stroke-width="2"/>
-<text x="275" y="47" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Parsing</text>
-<ellipse cx="572" cy="182" rx="80" ry="30" fill="white" stroke="#3BC3FF" stroke-width="2"/>
-<text x="572" y="187" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Validating</text>
-<ellipse cx="792" cy="242" rx="80" ry="30" fill="white" stroke="#3BC3FF" stroke-width="2"/>
-<text x="792" y="247" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Laying Out</text>
-<ellipse cx="909" cy="382" rx="80" ry="30" fill="white" stroke="#3BC3FF" stroke-width="2"/>
-<text x="909" y="387" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Rendering</text>
-<ellipse cx="119" cy="242" rx="80" ry="30" fill="white" stroke="#3BC3FF" stroke-width="2"/>
-<text x="119" y="247" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Generating OPL</text>
-<path d="M 275 72 L 275 142 L 352 142 L 352 152" stroke="#333" stroke-width="1.5" marker-start="url(#hollow-circle)"  fill="none"/>
-<path d="M 235 72 L 235 222 L 480 222 L 480 332" stroke="#333" stroke-width="1.5"  marker-end="url(#arrow)" fill="none"/>
-<path d="M 480 332 L 480 212 L 545 212" stroke="#333" stroke-width="1.5"  marker-end="url(#hollow-arrow)" fill="none"/>
-<path d="M 599 212 L 599 222 L 590 222 L 590 332" stroke="#333" stroke-width="1.5"  marker-end="url(#hollow-arrow)" fill="none"/>
-<path d="M 752 272 L 752 282 L 590 282 L 590 332" stroke="#333" stroke-width="1.5" marker-start="url(#hollow-circle)"  fill="none"/>
-<path d="M 792 272 L 792 492" stroke="#333" stroke-width="1.5"  marker-end="url(#arrow)" fill="none"/>
-<path d="M 882 412 L 882 422 L 846 422 L 846 492" stroke="#333" stroke-width="1.5" marker-start="url(#hollow-circle)"  fill="none"/>
-<path d="M 936 412 L 936 422 L 1039 422 L 1039 492" stroke="#333" stroke-width="1.5"  marker-end="url(#arrow)" fill="none"/>
-<path d="M 146 272 L 146 282 L 473 282 A 7 7 0 0 0 487 282 L 590 282 L 590 332" stroke="#333" stroke-width="1.5" marker-start="url(#hollow-circle)"  fill="none"/>
-<path d="M 92 272 L 92 352" stroke="#333" stroke-width="1.5"  marker-end="url(#arrow)" fill="none"/>
-<path d="M 315 72 L 315 114 L 572 114 L 572 152" stroke="#333" stroke-width="1.5"  marker-end="url(#hollow-arrow)" fill="none"/>
-<path d="M 832 272 L 832 342 L 909 342 L 909 352" stroke="#333" stroke-width="1.5"  marker-end="url(#hollow-arrow)" fill="none"/>
+<rect x="479" y="152" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2" stroke-dasharray="8,4"/>
+<text x="559" y="172" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">YAML File</text>
+<rect x="592" y="292" width="250" height="90" fill="white" stroke="#70E483" stroke-width="2"/>
+<text x="717" y="312" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">OPM Model</text>
+<rect x="602" y="332" width="100" height="30" rx="8" ry="8" fill="white" stroke="#70E483" stroke-width="3"/>
+<text x="652" y="352" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#333">raw</text>
+<rect x="712" y="332" width="100" height="30" rx="8" ry="8" fill="white" stroke="#70E483" stroke-width="1.5"/>
+<rect x="715" y="335" width="94" height="24" rx="6" ry="6" fill="none" stroke="#70E483" stroke-width="1"/>
+<text x="762" y="352" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#333">validated</text>
+<rect x="232" y="492" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2"/>
+<text x="312" y="512" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">ELK Layout</text>
+<rect x="12" y="492" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2"/>
+<text x="92" y="512" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">SVG Diagram</text>
+<rect x="959" y="352" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2"/>
+<text x="1039" y="372" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">OPL Sentences</text>
+<ellipse cx="675" cy="42" rx="80" ry="30" fill="white" stroke="#3BC3FF" stroke-width="2"/>
+<text x="675" y="47" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Parsing</text>
+<ellipse cx="792" cy="182" rx="80" ry="30" fill="white" stroke="#3BC3FF" stroke-width="2"/>
+<text x="792" y="187" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Validating</text>
+<ellipse cx="339" cy="242" rx="80" ry="30" fill="white" stroke="#3BC3FF" stroke-width="2"/>
+<text x="339" y="247" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Laying Out</text>
+<ellipse cx="223" cy="382" rx="80" ry="30" fill="white" stroke="#3BC3FF" stroke-width="2"/>
+<text x="223" y="387" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Rendering</text>
+<ellipse cx="1012" cy="242" rx="80" ry="30" fill="white" stroke="#3BC3FF" stroke-width="2"/>
+<text x="1012" y="247" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Generating OPL</text>
+<path d="M 635 72 L 635 142 L 559 142 L 559 152" stroke="#333" stroke-width="1.5" marker-start="url(#hollow-circle)"  fill="none"/>
+<path d="M 675 72 L 652 72 L 652 332" stroke="#333" stroke-width="1.5"  marker-end="url(#arrow)" fill="none"/>
+<path d="M 665.9188707761293 332 L 777.7170968556532 211.5179998316501" stroke="#333" stroke-width="1.5"  marker-end="url(#hollow-arrow)" fill="none"/>
+<path d="M 777.7170968556532 211.5179998316501 L 763.7401311800966 332" stroke="#333" stroke-width="1.5"  marker-end="url(#hollow-arrow)" fill="none"/>
+<path d="M 379 272 L 379 282 L 645 282 A 7 7 0 0 0 659 282 L 762 282 L 762 332" stroke="#333" stroke-width="1.5" marker-start="url(#hollow-circle)"  fill="none"/>
+<path d="M 339 272 L 339 492" stroke="#333" stroke-width="1.5"  marker-end="url(#arrow)" fill="none"/>
+<path d="M 250 412 L 250 422 L 285 422 L 285 492" stroke="#333" stroke-width="1.5" marker-start="url(#hollow-circle)"  fill="none"/>
+<path d="M 196 412 L 196 422 L 92 422 L 92 492" stroke="#333" stroke-width="1.5"  marker-end="url(#arrow)" fill="none"/>
+<path d="M 985 272 L 985 282 L 762 282 L 762 332" stroke="#333" stroke-width="1.5" marker-start="url(#hollow-circle)"  fill="none"/>
+<path d="M 1039 272 L 1039 352" stroke="#333" stroke-width="1.5"  marker-end="url(#arrow)" fill="none"/>
+<path d="M 715 72 L 715 142 L 792 142 L 792 152" stroke="#333" stroke-width="1.5"  marker-end="url(#invoke-chevrons)" fill="none"/>
+<path d="M 299 272 L 299 342 L 223 342 L 223 352" stroke="#333" stroke-width="1.5"  marker-end="url(#invoke-chevrons)" fill="none"/>
 </g>
 </svg>

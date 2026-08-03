@@ -5,12 +5,16 @@
  * an SVG string. Handles:
  *   - Object (rectangle) and Process (ellipse) shapes with OPM styling
  *   - State rounded-rects nested inside objects
- *   - Orthogonal edge routing with state-targeted endpoints
- *   - Comb-style aggregation (triangle + horizontal bar + vertical stubs)
+ *   - Orthogonal edge routing with state-targeted endpoints, except
+ *     "changes" (effect) links, which are straight diagonals sharing one
+ *     anchor point per relationship on the process
+ *   - Comb-style aggregation (triangle + vertical spine + horizontal stubs,
+ *     parts stacked below the whole)
+ *   - Invocation links get a distinct double-chevron arrowhead so they
+ *     don't read as just another effect link, now that both use open
+ *     (non-filled) arrowheads
  *   - Semicircular line jumps at edge crossings (the single, consistent
- *     crossing-decoration convention — invocation links are distinguished
- *     from other procedural links only by their open arrowhead, matching
- *     the reference notation, so no second "kink" glyph competes with it)
+ *     crossing-decoration convention)
  */
 import type { LayoutResult, LayoutNode, LayoutState, LayoutEdge, Point } from './layout.js';
 import type { Relationship } from './types.js';
@@ -51,20 +55,33 @@ export function renderSvg(layout: LayoutResult): string {
     }
   }
 
-  const edgeInfos: { points: Point[]; stroke: string; markerStart: string; markerEnd: string }[] = [];
+  // "changes" (effect) edges are drawn as straight diagonals rather than
+  // orthogonal L-bends, and both the consumption (state -> process) and
+  // result (process -> state) segments of the same relationship share one
+  // anchor point on the process — chosen once, facing the changed object as
+  // a whole — instead of each direction computing its own nearby point.
+  const changesAnchors = computeChangesAnchors(otherEdges, layout);
+
+  const edgeInfos: { points: Point[]; stroke: string; markerStart: string; markerEnd: string; diagonal: boolean }[] = [];
   for (const edge of otherEdges) {
-    const points = computeEdgePoints(edge, layout);
+    const rel = edge.link.relationship;
+    const anchor = changesAnchors.get(edge.link.id);
+    const points = rel === 'changes' && anchor
+      ? computeChangesPoints(edge, anchor, layout)
+      : computeEdgePoints(edge, layout);
     if (points.length < 2) continue;
 
-    const rel = edge.link.relationship;
     const sourceIsProcess = isProcessEntity(edge.sourceId, layout);
     const markers = edgeMarkers(rel, edge.id, sourceIsProcess);
     const stroke = edgeStroke(rel, edge.id);
 
-    edgeInfos.push({ points, stroke, markerStart: markers.start, markerEnd: markers.end });
+    edgeInfos.push({ points, stroke, markerStart: markers.start, markerEnd: markers.end, diagonal: rel === 'changes' });
   }
 
-  const jumpMap = detectJumps(edgeInfos.map(e => e.points));
+  // Diagonal segments are excluded from crossing detection: the hop-arc math
+  // assumes a purely horizontal or vertical segment, so a diagonal line
+  // can't be a jump owner without drawing an incorrect arc.
+  const jumpMap = detectJumps(edgeInfos.map(e => e.diagonal ? [] : e.points));
 
   for (let i = 0; i < edgeInfos.length; i++) {
     const info = edgeInfos[i];
@@ -75,7 +92,7 @@ export function renderSvg(layout: LayoutResult): string {
     );
   }
 
-  const obstacles = edgeInfos.flatMap(e => horizontalSegments(e.points));
+  const obstacles = edgeInfos.flatMap(e => verticalSegments(e.points));
   for (const [, edges] of aggGroups) {
     parts.push(renderAggregationGroup(edges, layout, obstacles));
   }
@@ -109,6 +126,10 @@ function defs(): string {
   <marker id="hollow-arrow" viewBox="0 0 10 10" refX="10" refY="5"
     markerWidth="8" markerHeight="8" orient="auto">
     <path d="M 0 0 L 10 5 L 0 10 z" fill="white" stroke="#333" stroke-width="1.5"/>
+  </marker>
+  <marker id="invoke-chevrons" viewBox="0 0 13 10" refX="13" refY="5"
+    markerWidth="11" markerHeight="8.5" orient="auto">
+    <path d="M 0 0 L 5 5 L 0 10 M 7 0 L 12 5 L 7 10" fill="none" stroke="#333" stroke-width="1.5"/>
   </marker>
 </defs>`;
 }
@@ -200,8 +221,8 @@ function edgeMarkers(rel: Relationship, edgeId: string, sourceIsProcess: boolean
       return sourceIsProcess
         ? { start: '', end: 'marker-end="url(#arrow)"' }
         : { start: 'marker-start="url(#arrow)"', end: '' };
-    case 'invokes':
-      return { start: '', end: 'marker-end="url(#hollow-arrow)"' };
+    case 'invokes': // distinct double-chevron so it doesn't read as another effect link
+      return { start: '', end: 'marker-end="url(#invoke-chevrons)"' };
     case 'is a':
       return { start: '', end: 'marker-end="url(#hollow-triangle)"' };
     case 'changes': // effect/consumption/result: open outline arrowhead per the target style
@@ -224,6 +245,35 @@ function isProcessEntity(id: string, layout: LayoutResult): boolean {
 
 function edgeStroke(_rel: Relationship, _edgeId: string): string {
   return 'stroke="#333" stroke-width="1.5"';
+}
+
+/**
+ * One shared anchor point per "changes" relationship, keyed by the
+ * relationship id (shared by its -from and -to edge pair). The anchor faces
+ * the changed object as a whole — using the object's center rather than the
+ * specific state's position — so both directions read as meeting at the
+ * same spot on the process regardless of which side of it the object sits.
+ */
+function computeChangesAnchors(edges: LayoutEdge[], layout: LayoutResult): Map<string, Point> {
+  const anchors = new Map<string, Point>();
+  for (const edge of edges) {
+    if (edge.link.relationship !== 'changes' || anchors.has(edge.link.id)) continue;
+    const processId = isProcessEntity(edge.sourceId, layout) ? edge.sourceId : edge.targetId;
+    const objectId = processId === edge.sourceId ? edge.targetId : edge.sourceId;
+    const objectCenter = findCenter(objectId, layout);
+    if (!objectCenter) continue;
+    const anchor = findBorderPoint(processId, layout, objectCenter);
+    if (anchor) anchors.set(edge.link.id, anchor);
+  }
+  return anchors;
+}
+
+/** Straight diagonal from the process's shared anchor to the state's border. */
+function computeChangesPoints(edge: LayoutEdge, anchor: Point, layout: LayoutResult): Point[] {
+  const stateId = edge.sourceState ?? edge.targetState;
+  if (!stateId) return [];
+  const stateBorder = findBorderPoint(stateId, layout, anchor) ?? anchor;
+  return edge.sourceState ? [stateBorder, anchor] : [anchor, stateBorder];
 }
 
 function computeEdgePoints(edge: LayoutEdge, layout: LayoutResult): Point[] {
@@ -254,14 +304,21 @@ function computeEdgePoints(edge: LayoutEdge, layout: LayoutResult): Point[] {
       const exitDir = dy > 0 ? 1 : -1;
       const src = findBorderPoint(srcId, layout, { x: srcCenter.x, y: srcCenter.y + exitDir * 1000 }) ?? srcCenter;
       const tgt = findBorderPoint(tgtId, layout, { x: tgtCenter.x, y: tgtCenter.y - exitDir * 1000 }) ?? tgtCenter;
+      // tgt's border point was computed as the top/bottom-facing point on its
+      // shape, so the final segment into it must stay vertical (constant
+      // tgt.x) — bending at {x:tgt.x, y:src.y} keeps that, instead of
+      // bending at {x:src.x, y:tgt.y} which would arrive horizontally and
+      // point the arrowhead 90° off from the border it's actually touching.
       if (Math.abs(src.x - tgt.x) < 1) points = [src, tgt];
-      else points = [src, { x: src.x, y: tgt.y }, tgt];
+      else points = [src, { x: tgt.x, y: src.y }, tgt];
     } else {
       const exitDir = dx > 0 ? 1 : -1;
       const src = findBorderPoint(srcId, layout, { x: srcCenter.x + exitDir * 1000, y: srcCenter.y }) ?? srcCenter;
       const tgt = findBorderPoint(tgtId, layout, { x: tgtCenter.x - exitDir * 1000, y: tgtCenter.y }) ?? tgtCenter;
+      // Mirror of the branch above: tgt's border point is left/right-facing,
+      // so the final segment must stay horizontal (constant tgt.y).
       if (Math.abs(src.y - tgt.y) < 1) points = [src, tgt];
-      else points = [src, { x: tgt.x, y: src.y }, tgt];
+      else points = [src, { x: src.x, y: tgt.y }, tgt];
     }
   }
 
@@ -405,24 +462,33 @@ function buildPathWithJumps(points: Point[], jumps: Point[]): string {
   return d;
 }
 
-interface HSegment { y: number; x1: number; x2: number }
+interface VSegment { x: number; y1: number; y2: number }
 
-/** Extracts the horizontal runs of a routed edge path, used to keep the
- * hand-drawn aggregation comb (which ELK never sees) out of channels that
- * ELK already assigned to procedural edges. */
-function horizontalSegments(points: Point[]): HSegment[] {
-  const segs: HSegment[] = [];
+/** Extracts the vertical runs of a routed edge path, used to keep the
+ * hand-drawn aggregation spine (which ELK never sees) out of channels that
+ * ELK already assigned to procedural edges. For pure entity-to-entity
+ * aggregation this is normally a no-op — the layout engine already reserves
+ * the cluster's footprint — but state-scoped aggregation targets aren't
+ * clustered, so their comb still needs this safety net. */
+function verticalSegments(points: Point[]): VSegment[] {
+  const segs: VSegment[] = [];
   for (let i = 1; i < points.length; i++) {
     const p1 = points[i - 1];
     const p2 = points[i];
-    if (Math.abs(p1.y - p2.y) < 0.5) {
-      segs.push({ y: p1.y, x1: Math.min(p1.x, p2.x), x2: Math.max(p1.x, p2.x) });
+    if (Math.abs(p1.x - p2.x) < 0.5) {
+      segs.push({ x: p1.x, y1: Math.min(p1.y, p2.y), y2: Math.max(p1.y, p2.y) });
     }
   }
   return segs;
 }
 
-function renderAggregationGroup(edges: LayoutEdge[], layout: LayoutResult, obstacles: HSegment[]): string {
+/**
+ * Renders aggregation as a vertical spine with horizontal branches: the
+ * whole sits on top, a single line drops from its participation triangle,
+ * and each part branches off that spine at its own height via a short
+ * horizontal stub — parts stack vertically instead of fanning out in a row.
+ */
+function renderAggregationGroup(edges: LayoutEdge[], layout: LayoutResult, obstacles: VSegment[]): string {
   const parts: string[] = [];
   const stroke = edgeStroke('consists of', '');
   const sourceId = edges[0].sourceId;
@@ -444,50 +510,43 @@ function renderAggregationGroup(edges: LayoutEdge[], layout: LayoutResult, obsta
     `<polygon points="${trunkX},${triTopY} ${trunkX - TRI_WIDTH / 2},${triBottomY} ${trunkX + TRI_WIDTH / 2},${triBottomY}" fill="#333" stroke="#333" stroke-width="1"/>`,
   );
 
-  const targetInfos: { tgtId: string; center: Point; topY: number }[] = [];
+  const targetInfos: { tgtId: string; center: Point }[] = [];
   for (const edge of edges) {
     const tgtId = edge.targetState ?? edge.targetId;
     const c = findCenter(tgtId, layout);
-    const top = findNodeTop(tgtId, layout);
-    if (c && top !== null) targetInfos.push({ tgtId, center: c, topY: top });
+    if (c) targetInfos.push({ tgtId, center: c });
   }
   if (targetInfos.length === 0) return parts.join('\n');
 
-  const childXs = targetInfos.map(t => t.center.x);
-  childXs.push(trunkX);
-  const barLeft = Math.min(...childXs);
-  const barRight = Math.max(...childXs);
+  targetInfos.sort((a, b) => a.center.y - b.center.y);
+  const lastY = targetInfos[targetInfos.length - 1].center.y;
 
-  // Start as close to the children as possible, then walk the bar upward
-  // (away from the whole) in small steps until it clears any procedural edge
-  // segment that overlaps its x-span — otherwise the bar can land exactly on
-  // top of an unrelated edge's horizontal jog. The available window between
-  // the triangle and the first child row is often tight, so search finely
-  // rather than jumping by a full clearance unit and overshooting the room
-  // that exists.
-  const naiveBarY = Math.min(...targetInfos.map(t => t.topY)) - 10;
-  const minBarY = triBottomY + 2;
-  const collides = (y: number) => obstacles.some(o =>
-    Math.abs(o.y - y) < MIN_CLEARANCE && o.x1 < barRight && o.x2 > barLeft,
+  // Nudge the spine sideways in small steps if it would run through a
+  // procedural edge's own vertical segment.
+  const collides = (x: number) => obstacles.some(o =>
+    Math.abs(o.x - x) < MIN_CLEARANCE && o.y1 < lastY && o.y2 > triBottomY,
   );
   const STEP = 4;
-  let barY = naiveBarY;
-  while (barY - STEP >= minBarY && collides(barY)) {
-    barY -= STEP;
+  let spineX = trunkX;
+  let guard = 0;
+  while (collides(spineX) && guard++ < 50) {
+    spineX += STEP;
+  }
+
+  if (Math.abs(spineX - trunkX) > 0.5) {
+    parts.push(
+      `<line x1="${trunkX}" y1="${triBottomY}" x2="${spineX}" y2="${triBottomY}" ${stroke} fill="none"/>`,
+    );
   }
 
   parts.push(
-    `<line x1="${trunkX}" y1="${triBottomY}" x2="${trunkX}" y2="${barY}" ${stroke} fill="none"/>`,
-  );
-
-  parts.push(
-    `<line x1="${barLeft}" y1="${barY}" x2="${barRight}" y2="${barY}" ${stroke} fill="none"/>`,
+    `<line x1="${spineX}" y1="${triBottomY}" x2="${spineX}" y2="${lastY}" ${stroke} fill="none"/>`,
   );
 
   for (const { tgtId, center } of targetInfos) {
-    const topBorder = findBorderPoint(tgtId, layout, { x: center.x, y: center.y - 1000 }) ?? center;
+    const nearBorder = findBorderPoint(tgtId, layout, { x: spineX, y: center.y }) ?? center;
     parts.push(
-      `<line x1="${center.x}" y1="${barY}" x2="${center.x}" y2="${topBorder.y}" ${stroke} fill="none"/>`,
+      `<line x1="${spineX}" y1="${center.y}" x2="${nearBorder.x}" y2="${nearBorder.y}" ${stroke} fill="none"/>`,
     );
   }
 
@@ -558,16 +617,6 @@ function findStateBorderCenter(stateId: string, layout: LayoutResult, towardY: n
         const y = towardY < cy ? absTop : absTop + s.height;
         return { x: n.x + s.x + s.width / 2, y };
       }
-    }
-  }
-  return null;
-}
-
-function findNodeTop(id: string, layout: LayoutResult): number | null {
-  for (const n of layout.nodes) {
-    if (n.id === id) return n.y;
-    for (const s of n.children) {
-      if (s.id === id) return n.y + s.y;
     }
   }
   return null;
