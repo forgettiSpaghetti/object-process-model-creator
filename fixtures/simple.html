@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>simple.html</title>
+<style>
+  :root {
+    --bg: #f2f5f1;
+    --surface: #ffffff;
+    --surface-2: #eef1ec;
+    --border: #d7ded5;
+    --text: #1c2620;
+    --text-muted: #5c6b60;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", ui-sans-serif, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #10140f;
+      --surface: #171d16;
+      --surface-2: #1d241b;
+      --border: #2c362a;
+      --text: #e6ece4;
+      --text-muted: #93a390;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    padding: 32px 20px 60px;
+  }
+  main {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 {
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .stats {
+    display: flex;
+    gap: 16px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .stats b { color: var(--text); font-weight: 600; }
+  .body-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 18px;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .body-grid { grid-template-columns: 1fr; }
+  }
+  .canvas {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    overflow-x: auto;
+  }
+  .canvas svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+  .sentences {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  .sentences h2 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin: 0 0 12px;
+    font-weight: 600;
+  }
+  .sentences p {
+    margin: 0 0 9px;
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 14px 18px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .legend-note { opacity: .7; }
+  .legend-item svg { flex-shrink: 0; }
+  .legend-sep {
+    width: 1px;
+    align-self: stretch;
+    background: var(--border);
+    margin: 2px 2px;
+  }
+  .swatch-object, .swatch-process {
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    border-radius: 2px;
+  }
+  .swatch-object { background: #70E483; }
+  .swatch-process { background: #3BC3FF; border-radius: 50%; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>simple.html</h1>
+    <div class="stats">
+      <span><b>6</b> nodes</span>
+      <span><b>8</b> edges</span>
+      <span><b>539×399</b></span>
+    </div>
+  </header>
+
+  <div class="body-grid">
+    <div class="canvas">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 619 479" width="619" height="479">
+<defs>
+  <filter id="shadow" x="-5%" y="-5%" width="115%" height="115%">
+    <feDropShadow dx="3" dy="3" stdDeviation="2" flood-opacity="0.3"/>
+  </filter>
+  <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5"
+    markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/>
+  </marker>
+  <marker id="filled-circle" viewBox="0 0 10 10" refX="5" refY="5"
+    markerWidth="8" markerHeight="8" orient="auto">
+    <circle cx="5" cy="5" r="4" fill="#333"/>
+  </marker>
+  <marker id="hollow-circle" viewBox="0 0 10 10" refX="5" refY="5"
+    markerWidth="8" markerHeight="8" orient="auto">
+    <circle cx="5" cy="5" r="4" fill="white" stroke="#333" stroke-width="1.5"/>
+  </marker>
+  <marker id="hollow-triangle" viewBox="0 0 10 10" refX="10" refY="5"
+    markerWidth="10" markerHeight="10" orient="auto">
+    <path d="M 10 0 L 0 5 L 10 10 z" fill="white" stroke="#333" stroke-width="1"/>
+  </marker>
+  <marker id="hollow-arrow" viewBox="0 0 10 10" refX="10" refY="5"
+    markerWidth="8" markerHeight="8" orient="auto">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="white" stroke="#333" stroke-width="1.5"/>
+  </marker>
+  <marker id="invoke-chevrons" viewBox="0 0 13 10" refX="13" refY="5"
+    markerWidth="11" markerHeight="8.5" orient="auto">
+    <path d="M 0 0 L 5 5 L 0 10 M 7 0 L 12 5 L 7 10" fill="none" stroke="#333" stroke-width="1.5"/>
+  </marker>
+</defs>
+<g transform="translate(40, 40)">
+<rect x="192" y="12" width="250" height="90" fill="white" stroke="#70E483" stroke-width="2" filter="url(#shadow)"/>
+<text x="317" y="32" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Bread</text>
+<rect x="202" y="52" width="100" height="30" rx="8" ry="8" fill="white" stroke="#70E483" stroke-width="3"/>
+<text x="252" y="72" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#333">raw</text>
+<rect x="312" y="52" width="100" height="30" rx="8" ry="8" fill="white" stroke="#70E483" stroke-width="1.5"/>
+<rect x="315" y="55" width="94" height="24" rx="6" ry="6" fill="none" stroke="#70E483" stroke-width="1"/>
+<text x="362" y="72" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#333">baked</text>
+<rect x="367" y="157" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2" stroke-dasharray="8,4" filter="url(#shadow)"/>
+<text x="447" y="177" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Flour</text>
+<rect x="367" y="242" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2" stroke-dasharray="8,4" filter="url(#shadow)"/>
+<text x="447" y="262" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Water</text>
+<rect x="367" y="327" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2" stroke-dasharray="8,4" filter="url(#shadow)"/>
+<text x="447" y="347" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Yeast</text>
+<ellipse cx="92" cy="42" rx="80" ry="30" fill="white" stroke="#3BC3FF" stroke-width="2"/>
+<text x="92" y="47" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Baking</text>
+<ellipse cx="92" cy="182" rx="80" ry="30" fill="white" stroke="#3BC3FF" stroke-width="2"/>
+<text x="92" y="187" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Mixing</text>
+<path d="M 172 182 L 172 187 L 367 187" stroke="#333" stroke-width="1.5" marker-start="url(#hollow-circle)"  fill="none"/>
+<path d="M 172 182 L 172 272 L 367 272" stroke="#333" stroke-width="1.5" marker-start="url(#hollow-circle)"  fill="none"/>
+<path d="M 202 54.844525075459224 L 170.76500062287255 47.25100004152483" stroke="#333" stroke-width="1.5"  marker-end="url(#hollow-arrow)" fill="none"/>
+<path d="M 170.76500062287255 47.25100004152483 L 312 61.836457755431866" stroke="#333" stroke-width="1.5"  marker-end="url(#hollow-arrow)" fill="none"/>
+<path d="M 92 72 L 92 152" stroke="#333" stroke-width="1.5"  marker-end="url(#invoke-chevrons)" fill="none"/>
+<line x1="317" y1="102" x2="317" y2="117" stroke="#333" stroke-width="1.5" fill="none"/>
+<polygon points="317,117 309,129 325,129" fill="#333" stroke="#333" stroke-width="1"/>
+<line x1="317" y1="129" x2="317" y2="357" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="317" y1="187" x2="367" y2="187" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="317" y1="272" x2="367" y2="272" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="317" y1="357" x2="367" y2="357" stroke="#333" stroke-width="1.5" fill="none"/>
+</g>
+</svg>
+    </div>
+    <div class="sentences">
+      <h2>OPL Sentences</h2>
+      <p>Bread is a physical and systemic object.</p>
+      <p>Bread can be raw or baked.</p>
+      <p>State raw is initial.</p>
+      <p>State baked is final.</p>
+      <p>Flour is a physical and environmental object.</p>
+      <p>Water is a physical and environmental object.</p>
+      <p>Yeast is a physical and environmental object.</p>
+      <p>Baking is an informatical and systemic process.</p>
+      <p>Mixing is an informatical and systemic process.</p>
+      <p>Bread consists of Flour, Water, and Yeast.</p>
+      <p>Mixing requires Flour.</p>
+      <p>Mixing requires Water.</p>
+      <p>Baking changes Bread from raw to baked.</p>
+      <p>Baking invokes Mixing.</p>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span class="legend-item"><span class="swatch-object"></span> object</span>
+    <span class="legend-item"><span class="swatch-process"></span> process</span>
+    <span class="legend-sep"></span>
+    <span class="legend-item"><svg width="26" height="12" viewBox="0 0 26 12"><line x1="1" y1="6" x2="19" y2="6" stroke="#333" stroke-width="1.5"/><circle cx="21" cy="6" r="4" fill="white" stroke="#333" stroke-width="1.5"/></svg> instrument — requires</span>
+    <span class="legend-item"><svg width="26" height="12" viewBox="0 0 26 12"><line x1="1" y1="6" x2="16" y2="6" stroke="#333" stroke-width="1.5"/><path d="M16 1 L 25 6 L 16 11 Z" fill="white" stroke="#333" stroke-width="1.5"/></svg> effect — changes <span class="legend-note">(diagonal, one shared anchor per relationship)</span></span>
+    <span class="legend-item"><svg width="28" height="12" viewBox="0 0 28 12"><line x1="1" y1="6" x2="14" y2="6" stroke="#333" stroke-width="1.5"/><path d="M14 1 L 19 6 L 14 11 M 21 1 L 26 6 L 21 11" fill="none" stroke="#333" stroke-width="1.5"/></svg> invocation — invokes</span>
+    <span class="legend-sep"></span>
+    <span class="legend-item"><svg width="20" height="14" viewBox="0 0 20 14"><polygon points="10,1 3,12 17,12" fill="#333"/></svg> aggregation — consists of <span class="legend-note">(parts fan out off a spine below the whole)</span></span>
+  </div>
+</main>
+</body>
+</html>

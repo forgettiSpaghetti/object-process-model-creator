@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>self.html</title>
+<style>
+  :root {
+    --bg: #f2f5f1;
+    --surface: #ffffff;
+    --surface-2: #eef1ec;
+    --border: #d7ded5;
+    --text: #1c2620;
+    --text-muted: #5c6b60;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", ui-sans-serif, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #10140f;
+      --surface: #171d16;
+      --surface-2: #1d241b;
+      --border: #2c362a;
+      --text: #e6ece4;
+      --text-muted: #93a390;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    padding: 32px 20px 60px;
+  }
+  main {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 {
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .stats {
+    display: flex;
+    gap: 16px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .stats b { color: var(--text); font-weight: 600; }
+  .body-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 18px;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .body-grid { grid-template-columns: 1fr; }
+  }
+  .canvas {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    overflow-x: auto;
+  }
+  .canvas svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+  .sentences {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  .sentences h2 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin: 0 0 12px;
+    font-weight: 600;
+  }
+  .sentences p {
+    margin: 0 0 9px;
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 14px 18px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .legend-note { opacity: .7; }
+  .legend-item svg { flex-shrink: 0; }
+  .legend-sep {
+    width: 1px;
+    align-self: stretch;
+    background: var(--border);
+    margin: 2px 2px;
+  }
+  .swatch-object, .swatch-process {
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    border-radius: 2px;
+  }
+  .swatch-object { background: #70E483; }
+  .swatch-process { background: #3BC3FF; border-radius: 50%; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>self.html</h1>
+    <div class="stats">
+      <span><b>10</b> nodes</span>
+      <span><b>12</b> edges</span>
+      <span><b>1131×564</b></span>
+    </div>
+  </header>
+
+  <div class="body-grid">
+    <div class="canvas">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1211 644" width="1211" height="644">
+<defs>
+  <filter id="shadow" x="-5%" y="-5%" width="115%" height="115%">
+    <feDropShadow dx="3" dy="3" stdDeviation="2" flood-opacity="0.3"/>
+  </filter>
+  <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5"
+    markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/>
+  </marker>
+  <marker id="filled-circle" viewBox="0 0 10 10" refX="5" refY="5"
+    markerWidth="8" markerHeight="8" orient="auto">
+    <circle cx="5" cy="5" r="4" fill="#333"/>
+  </marker>
+  <marker id="hollow-circle" viewBox="0 0 10 10" refX="5" refY="5"
+    markerWidth="8" markerHeight="8" orient="auto">
+    <circle cx="5" cy="5" r="4" fill="white" stroke="#333" stroke-width="1.5"/>
+  </marker>
+  <marker id="hollow-triangle" viewBox="0 0 10 10" refX="10" refY="5"
+    markerWidth="10" markerHeight="10" orient="auto">
+    <path d="M 10 0 L 0 5 L 10 10 z" fill="white" stroke="#333" stroke-width="1"/>
+  </marker>
+  <marker id="hollow-arrow" viewBox="0 0 10 10" refX="10" refY="5"
+    markerWidth="8" markerHeight="8" orient="auto">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="white" stroke="#333" stroke-width="1.5"/>
+  </marker>
+  <marker id="invoke-chevrons" viewBox="0 0 13 10" refX="13" refY="5"
+    markerWidth="11" markerHeight="8.5" orient="auto">
+    <path d="M 0 0 L 5 5 L 0 10 M 7 0 L 12 5 L 7 10" fill="none" stroke="#333" stroke-width="1.5"/>
+  </marker>
+</defs>
+<g transform="translate(40, 40)">
+<rect x="479" y="152" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2" stroke-dasharray="8,4"/>
+<text x="559" y="172" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">YAML File</text>
+<rect x="592" y="292" width="250" height="90" fill="white" stroke="#70E483" stroke-width="2"/>
+<text x="717" y="312" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">OPM Model</text>
+<rect x="602" y="332" width="100" height="30" rx="8" ry="8" fill="white" stroke="#70E483" stroke-width="3"/>
+<text x="652" y="352" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#333">raw</text>
+<rect x="712" y="332" width="100" height="30" rx="8" ry="8" fill="white" stroke="#70E483" stroke-width="1.5"/>
+<rect x="715" y="335" width="94" height="24" rx="6" ry="6" fill="none" stroke="#70E483" stroke-width="1"/>
+<text x="762" y="352" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#333">validated</text>
+<rect x="232" y="492" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2"/>
+<text x="312" y="512" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">ELK Layout</text>
+<rect x="12" y="492" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2"/>
+<text x="92" y="512" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">SVG Diagram</text>
+<rect x="959" y="352" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2"/>
+<text x="1039" y="372" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">OPL Sentences</text>
+<ellipse cx="675" cy="42" rx="80" ry="30" fill="white" stroke="#3BC3FF" stroke-width="2"/>
+<text x="675" y="47" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Parsing</text>
+<ellipse cx="792" cy="182" rx="80" ry="30" fill="white" stroke="#3BC3FF" stroke-width="2"/>
+<text x="792" y="187" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Validating</text>
+<ellipse cx="339" cy="242" rx="80" ry="30" fill="white" stroke="#3BC3FF" stroke-width="2"/>
+<text x="339" y="247" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Laying Out</text>
+<ellipse cx="223" cy="382" rx="80" ry="30" fill="white" stroke="#3BC3FF" stroke-width="2"/>
+<text x="223" y="387" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Rendering</text>
+<ellipse cx="1012" cy="242" rx="80" ry="30" fill="white" stroke="#3BC3FF" stroke-width="2"/>
+<text x="1012" y="247" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Generating OPL</text>
+<path d="M 635 72 L 635 142 L 559 142 L 559 152" stroke="#333" stroke-width="1.5" marker-start="url(#hollow-circle)"  fill="none"/>
+<path d="M 675 72 L 652 72 L 652 332" stroke="#333" stroke-width="1.5"  marker-end="url(#arrow)" fill="none"/>
+<path d="M 665.9188707761293 332 L 777.7170968556532 211.5179998316501" stroke="#333" stroke-width="1.5"  marker-end="url(#hollow-arrow)" fill="none"/>
+<path d="M 777.7170968556532 211.5179998316501 L 763.7401311800966 332" stroke="#333" stroke-width="1.5"  marker-end="url(#hollow-arrow)" fill="none"/>
+<path d="M 379 272 L 379 282 L 645 282 A 7 7 0 0 0 659 282 L 762 282 L 762 332" stroke="#333" stroke-width="1.5" marker-start="url(#hollow-circle)"  fill="none"/>
+<path d="M 339 272 L 339 492" stroke="#333" stroke-width="1.5"  marker-end="url(#arrow)" fill="none"/>
+<path d="M 250 412 L 250 422 L 285 422 L 285 492" stroke="#333" stroke-width="1.5" marker-start="url(#hollow-circle)"  fill="none"/>
+<path d="M 196 412 L 196 422 L 92 422 L 92 492" stroke="#333" stroke-width="1.5"  marker-end="url(#arrow)" fill="none"/>
+<path d="M 985 272 L 985 282 L 762 282 L 762 332" stroke="#333" stroke-width="1.5" marker-start="url(#hollow-circle)"  fill="none"/>
+<path d="M 1039 272 L 1039 352" stroke="#333" stroke-width="1.5"  marker-end="url(#arrow)" fill="none"/>
+<path d="M 715 72 L 715 142 L 792 142 L 792 152" stroke="#333" stroke-width="1.5"  marker-end="url(#invoke-chevrons)" fill="none"/>
+<path d="M 299 272 L 299 342 L 223 342 L 223 352" stroke="#333" stroke-width="1.5"  marker-end="url(#invoke-chevrons)" fill="none"/>
+</g>
+</svg>
+    </div>
+    <div class="sentences">
+      <h2>OPL Sentences</h2>
+      <p>YAML File is an informatical and environmental object.</p>
+      <p>OPM Model is an informatical and systemic object.</p>
+      <p>OPM Model can be raw or validated.</p>
+      <p>State raw is initial.</p>
+      <p>State validated is final.</p>
+      <p>ELK Layout is an informatical and systemic object.</p>
+      <p>SVG Diagram is an informatical and systemic object.</p>
+      <p>OPL Sentences is an informatical and systemic object.</p>
+      <p>Parsing is an informatical and systemic process.</p>
+      <p>Validating is an informatical and systemic process.</p>
+      <p>Laying Out is an informatical and systemic process.</p>
+      <p>Rendering is an informatical and systemic process.</p>
+      <p>Generating OPL is an informatical and systemic process.</p>
+      <p>Parsing requires YAML File.</p>
+      <p>Parsing yields OPM Model at state raw.</p>
+      <p>Validating changes OPM Model from raw to validated.</p>
+      <p>Laying Out requires OPM Model at state validated.</p>
+      <p>Laying Out yields ELK Layout.</p>
+      <p>Rendering requires ELK Layout.</p>
+      <p>Rendering yields SVG Diagram.</p>
+      <p>Generating OPL requires OPM Model at state validated.</p>
+      <p>Generating OPL yields OPL Sentences.</p>
+      <p>Parsing invokes Validating.</p>
+      <p>Laying Out invokes Rendering.</p>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span class="legend-item"><span class="swatch-object"></span> object</span>
+    <span class="legend-item"><span class="swatch-process"></span> process</span>
+    <span class="legend-sep"></span>
+    <span class="legend-item"><svg width="26" height="12" viewBox="0 0 26 12"><line x1="1" y1="6" x2="19" y2="6" stroke="#333" stroke-width="1.5"/><circle cx="21" cy="6" r="4" fill="white" stroke="#333" stroke-width="1.5"/></svg> instrument — requires</span>
+    <span class="legend-item"><svg width="26" height="12" viewBox="0 0 26 12"><line x1="1" y1="6" x2="16" y2="6" stroke="#333" stroke-width="1.5"/><path d="M16 1 L 25 6 L 16 11 Z" fill="white" stroke="#333" stroke-width="1.5"/></svg> effect — changes <span class="legend-note">(diagonal, one shared anchor per relationship)</span></span>
+    <span class="legend-item"><svg width="28" height="12" viewBox="0 0 28 12"><line x1="1" y1="6" x2="14" y2="6" stroke="#333" stroke-width="1.5"/><path d="M14 1 L 19 6 L 14 11 M 21 1 L 26 6 L 21 11" fill="none" stroke="#333" stroke-width="1.5"/></svg> invocation — invokes</span>
+    <span class="legend-item"><svg width="26" height="12" viewBox="0 0 26 12"><line x1="1" y1="6" x2="16" y2="6" stroke="#333" stroke-width="1.5"/><path d="M16 1 L 25 6 L 16 11 Z" fill="#333"/></svg> result / consumption — yields, consumes</span>
+  </div>
+</main>
+</body>
+</html>

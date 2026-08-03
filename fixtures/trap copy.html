@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>trap copy.html</title>
+<style>
+  :root {
+    --bg: #f2f5f1;
+    --surface: #ffffff;
+    --surface-2: #eef1ec;
+    --border: #d7ded5;
+    --text: #1c2620;
+    --text-muted: #5c6b60;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", ui-sans-serif, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #10140f;
+      --surface: #171d16;
+      --surface-2: #1d241b;
+      --border: #2c362a;
+      --text: #e6ece4;
+      --text-muted: #93a390;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    padding: 32px 20px 60px;
+  }
+  main {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 {
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .stats {
+    display: flex;
+    gap: 16px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .stats b { color: var(--text); font-weight: 600; }
+  .body-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 18px;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .body-grid { grid-template-columns: 1fr; }
+  }
+  .canvas {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    overflow-x: auto;
+  }
+  .canvas svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+  .sentences {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  .sentences h2 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin: 0 0 12px;
+    font-weight: 600;
+  }
+  .sentences p {
+    margin: 0 0 9px;
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 14px 18px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .legend-note { opacity: .7; }
+  .legend-item svg { flex-shrink: 0; }
+  .legend-sep {
+    width: 1px;
+    align-self: stretch;
+    background: var(--border);
+    margin: 2px 2px;
+  }
+  .swatch-object, .swatch-process {
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    border-radius: 2px;
+  }
+  .swatch-object { background: #70E483; }
+  .swatch-process { background: #3BC3FF; border-radius: 50%; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>trap copy.html</h1>
+    <div class="stats">
+      <span><b>27</b> nodes</span>
+      <span><b>42</b> edges</span>
+      <span><b>1131×2029</b></span>
+    </div>
+  </header>
+
+  <div class="body-grid">
+    <div class="canvas">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1211 2109" width="1211" height="2109">
+<defs>
+  <filter id="shadow" x="-5%" y="-5%" width="115%" height="115%">
+    <feDropShadow dx="3" dy="3" stdDeviation="2" flood-opacity="0.3"/>
+  </filter>
+  <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5"
+    markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/>
+  </marker>
+  <marker id="filled-circle" viewBox="0 0 10 10" refX="5" refY="5"
+    markerWidth="8" markerHeight="8" orient="auto">
+    <circle cx="5" cy="5" r="4" fill="#333"/>
+  </marker>
+  <marker id="hollow-circle" viewBox="0 0 10 10" refX="5" refY="5"
+    markerWidth="8" markerHeight="8" orient="auto">
+    <circle cx="5" cy="5" r="4" fill="white" stroke="#333" stroke-width="1.5"/>
+  </marker>
+  <marker id="hollow-triangle" viewBox="0 0 10 10" refX="10" refY="5"
+    markerWidth="10" markerHeight="10" orient="auto">
+    <path d="M 10 0 L 0 5 L 10 10 z" fill="white" stroke="#333" stroke-width="1"/>
+  </marker>
+  <marker id="hollow-arrow" viewBox="0 0 10 10" refX="10" refY="5"
+    markerWidth="8" markerHeight="8" orient="auto">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="white" stroke="#333" stroke-width="1.5"/>
+  </marker>
+  <marker id="invoke-chevrons" viewBox="0 0 13 10" refX="13" refY="5"
+    markerWidth="11" markerHeight="8.5" orient="auto">
+    <path d="M 0 0 L 5 5 L 0 10 M 7 0 L 12 5 L 7 10" fill="none" stroke="#333" stroke-width="1.5"/>
+  </marker>
+</defs>
+<g transform="translate(40, 40)">
+<rect x="12" y="12" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2" stroke-dasharray="8,4" filter="url(#shadow)"/>
+<text x="92" y="32" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Operator</text>
+<ellipse cx="92" cy="182" rx="80" ry="30" fill="white" stroke="#3BC3FF" stroke-width="2" filter="url(#shadow)"/>
+<text x="92" y="187" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Setting</text>
+<ellipse cx="272" cy="212" rx="80" ry="30" fill="white" stroke="#3BC3FF" stroke-width="2" filter="url(#shadow)"/>
+<text x="272" y="217" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Pressing</text>
+<ellipse cx="272" cy="352" rx="80" ry="30" fill="white" stroke="#3BC3FF" stroke-width="2" filter="url(#shadow)"/>
+<text x="272" y="357" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Disengaging</text>
+<ellipse cx="272" cy="492" rx="80" ry="30" fill="white" stroke="#3BC3FF" stroke-width="2" filter="url(#shadow)"/>
+<text x="272" y="497" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Forcing</text>
+<ellipse cx="312" cy="632" rx="80" ry="30" fill="white" stroke="#3BC3FF" stroke-width="2" filter="url(#shadow)"/>
+<text x="312" y="637" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Catching</text>
+<rect x="479" y="12" width="250" height="90" fill="white" stroke="#70E483" stroke-width="2" filter="url(#shadow)"/>
+<text x="604" y="32" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Trap</text>
+<rect x="489" y="52" width="100" height="30" rx="8" ry="8" fill="white" stroke="#70E483" stroke-width="1.5"/>
+<text x="539" y="72" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#333">set</text>
+<rect x="599" y="52" width="100" height="30" rx="8" ry="8" fill="white" stroke="#70E483" stroke-width="3"/>
+<text x="649" y="72" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#333">sprung</text>
+<rect x="654" y="157" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2" filter="url(#shadow)"/>
+<text x="734" y="177" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Base</text>
+<rect x="784" y="272" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2" filter="url(#shadow)"/>
+<text x="864" y="292" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Base Staple</text>
+<rect x="654" y="357" width="250" height="90" fill="white" stroke="#70E483" stroke-width="2" filter="url(#shadow)"/>
+<text x="779" y="377" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Jaw</text>
+<rect x="664" y="397" width="100" height="30" rx="8" ry="8" fill="white" stroke="#70E483" stroke-width="1.5"/>
+<text x="714" y="417" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#333">held back</text>
+<rect x="774" y="397" width="100" height="30" rx="8" ry="8" fill="white" stroke="#70E483" stroke-width="1.5"/>
+<text x="824" y="417" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#333">released</text>
+<rect x="829" y="502" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2" filter="url(#shadow)"/>
+<text x="909" y="522" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Front End</text>
+<rect x="654" y="587" width="167.56" height="60" fill="white" stroke="#70E483" stroke-width="2" filter="url(#shadow)"/>
+<text x="737.78" y="607" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Transverse Spring</text>
+<rect x="654" y="672" width="250" height="90" fill="white" stroke="#70E483" stroke-width="2" filter="url(#shadow)"/>
+<text x="779" y="692" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Locking Bar</text>
+<rect x="664" y="712" width="100" height="30" rx="8" ry="8" fill="white" stroke="#70E483" stroke-width="1.5"/>
+<text x="714" y="732" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#333">engaged</text>
+<rect x="774" y="712" width="100" height="30" rx="8" ry="8" fill="white" stroke="#70E483" stroke-width="1.5"/>
+<text x="824" y="732" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#333">disengaged</text>
+<rect x="829" y="817" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2" filter="url(#shadow)"/>
+<text x="909" y="837" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Rear Eye</text>
+<rect x="654" y="902" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2" filter="url(#shadow)"/>
+<text x="734" y="922" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Arm</text>
+<rect x="654" y="987" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2" filter="url(#shadow)"/>
+<text x="734" y="1007" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Inward Extension</text>
+<rect x="654" y="1072" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2" filter="url(#shadow)"/>
+<text x="734" y="1092" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Perforated Ears</text>
+<rect x="654" y="1157" width="250" height="90" fill="white" stroke="#70E483" stroke-width="2" filter="url(#shadow)"/>
+<text x="779" y="1177" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Trigger</text>
+<rect x="664" y="1197" width="100" height="30" rx="8" ry="8" fill="white" stroke="#70E483" stroke-width="3"/>
+<text x="714" y="1217" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#333">at rest</text>
+<rect x="774" y="1197" width="100" height="30" rx="8" ry="8" fill="white" stroke="#70E483" stroke-width="1.5"/>
+<text x="824" y="1217" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#333">pressed</text>
+<rect x="829" y="1302" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2" filter="url(#shadow)"/>
+<text x="909" y="1322" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Catch</text>
+<rect x="959" y="1417" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2" filter="url(#shadow)"/>
+<text x="1039" y="1437" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Shoulder</text>
+<rect x="959" y="1502" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2" filter="url(#shadow)"/>
+<text x="1039" y="1522" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Pintle-Eye</text>
+<rect x="959" y="1587" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2" filter="url(#shadow)"/>
+<text x="1039" y="1607" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Securing-Plates</text>
+<rect x="829" y="1672" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2" filter="url(#shadow)"/>
+<text x="909" y="1692" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Pintle</text>
+<rect x="829" y="1757" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2" filter="url(#shadow)"/>
+<text x="909" y="1777" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Bait Receptacle</text>
+<rect x="959" y="1872" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2" filter="url(#shadow)"/>
+<text x="1039" y="1892" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Bait-Opening</text>
+<rect x="959" y="1957" width="160" height="60" fill="white" stroke="#70E483" stroke-width="2" filter="url(#shadow)"/>
+<text x="1039" y="1977" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Plate</text>
+<rect x="209" y="12" width="250" height="90" fill="white" stroke="#70E483" stroke-width="2" stroke-dasharray="8,4" filter="url(#shadow)"/>
+<text x="334" y="32" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#333">Animal</text>
+<rect x="219" y="52" width="100" height="30" rx="8" ry="8" fill="white" stroke="#70E483" stroke-width="3"/>
+<text x="269" y="72" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#333">free</text>
+<rect x="329" y="52" width="100" height="30" rx="8" ry="8" fill="white" stroke="#70E483" stroke-width="1.5"/>
+<rect x="332" y="55" width="94" height="24" rx="6" ry="6" fill="none" stroke="#70E483" stroke-width="1"/>
+<text x="379" y="72" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#333">caught</text>
+<path d="M 172 182 L 172 717 L 654 717" stroke="#333" stroke-width="1.5" marker-start="url(#hollow-circle)"  fill="none"/>
+<path d="M 92 212 L 165 212 A 7 7 0 0 0 179 212 L 909 212 L 909 1302" stroke="#333" stroke-width="1.5" marker-start="url(#hollow-circle)"  fill="none"/>
+<path d="M 599 77.06537880851145 L 159.0435598594717 165.63194339368366" stroke="#333" stroke-width="1.5"  marker-end="url(#hollow-arrow)" fill="none"/>
+<path d="M 159.0435598594717 165.63194339368366 L 489 79.97937513010758" stroke="#333" stroke-width="1.5"  marker-end="url(#hollow-arrow)" fill="none"/>
+<path d="M 272 242 L 779 242 L 779 1157" stroke="#333" stroke-width="1.5" marker-start="url(#hollow-circle)"  fill="none"/>
+<path d="M 707.4019289519086 1197 L 287.0879232289264 241.46162523991543" stroke="#333" stroke-width="1.5"  marker-end="url(#hollow-arrow)" fill="none"/>
+<path d="M 287.0879232289264 241.46162523991543 L 815.7018416159412 1197" stroke="#333" stroke-width="1.5"  marker-end="url(#hollow-arrow)" fill="none"/>
+<path d="M 272 382 L 772 382 A 7 7 0 0 0 786 382 L 909 382 L 909 1302" stroke="#333" stroke-width="1.5" marker-start="url(#hollow-circle)"  fill="none"/>
+<path d="M 696.5609945329344 712 L 308.95793906341083 378.606800311923" stroke="#333" stroke-width="1.5"  marker-end="url(#hollow-arrow)" fill="none"/>
+<path d="M 308.95793906341083 378.606800311923 L 801.8249663857798 712" stroke="#333" stroke-width="1.5"  marker-end="url(#hollow-arrow)" fill="none"/>
+<path d="M 525.2511604257484 82 L 303.10598225754103 324.36064829525725" stroke="#333" stroke-width="1.5"  marker-end="url(#hollow-arrow)" fill="none"/>
+<path d="M 303.10598225754103 324.36064829525725 L 628.8399238558628 82" stroke="#333" stroke-width="1.5"  marker-end="url(#hollow-arrow)" fill="none"/>
+<path d="M 352 492 L 352 617 L 385 617 A 7 7 0 0 0 399 617 L 654 617" stroke="#333" stroke-width="1.5" marker-start="url(#hollow-circle)"  fill="none"/>
+<path d="M 664 421.0838129117823 L 344.30773678089594 479.1643070803143" stroke="#333" stroke-width="1.5"  marker-end="url(#hollow-arrow)" fill="none"/>
+<path d="M 344.30773678089594 479.1643070803143 L 774 419.000770309447" stroke="#333" stroke-width="1.5"  marker-end="url(#hollow-arrow)" fill="none"/>
+<path d="M 392 632 L 392 532 L 772 532 A 7 7 0 0 0 786 532 L 829 532" stroke="#333" stroke-width="1.5" marker-start="url(#hollow-circle)"  fill="none"/>
+<path d="M 92 72 L 92 152" stroke="#333" stroke-width="1.5"  marker-end="url(#filled-circle)" fill="none"/>
+<path d="M 272 102 L 272 182" stroke="#333" stroke-width="1.5"  marker-end="url(#filled-circle)" fill="none"/>
+<path d="M 272 242 L 272 322" stroke="#333" stroke-width="1.5"  marker-end="url(#invoke-chevrons)" fill="none"/>
+<path d="M 272 382 L 272 462" stroke="#333" stroke-width="1.5"  marker-end="url(#invoke-chevrons)" fill="none"/>
+<path d="M 272 522 L 272 602" stroke="#333" stroke-width="1.5"  marker-end="url(#invoke-chevrons)" fill="none"/>
+<path d="M 270.2377790613847 82 L 313.1477079593903 602.0030874250263" stroke="#333" stroke-width="1.5"  marker-end="url(#hollow-arrow)" fill="none"/>
+<path d="M 313.1477079593903 602.0030874250263 L 377.15368470981474 82" stroke="#333" stroke-width="1.5"  marker-end="url(#hollow-arrow)" fill="none"/>
+<line x1="604" y1="102" x2="604" y2="117" stroke="#333" stroke-width="1.5" fill="none"/>
+<polygon points="604,117 596,129 612,129" fill="#333" stroke="#333" stroke-width="1"/>
+<line x1="604" y1="129" x2="604" y2="1202" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="604" y1="187" x2="654" y2="187" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="604" y1="402" x2="654" y2="402" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="604" y1="617" x2="654" y2="617" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="604" y1="717" x2="654" y2="717" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="604" y1="932" x2="654" y2="932" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="604" y1="1017" x2="654" y2="1017" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="604" y1="1102" x2="654" y2="1102" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="604" y1="1202" x2="654" y2="1202" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="734" y1="217" x2="734" y2="232" stroke="#333" stroke-width="1.5" fill="none"/>
+<polygon points="734,232 726,244 742,244" fill="#333" stroke="#333" stroke-width="1"/>
+<line x1="734" y1="244" x2="734" y2="302" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="734" y1="302" x2="784" y2="302" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="779" y1="447" x2="779" y2="462" stroke="#333" stroke-width="1.5" fill="none"/>
+<polygon points="779,462 771,474 787,474" fill="#333" stroke="#333" stroke-width="1"/>
+<line x1="779" y1="474" x2="791" y2="474" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="791" y1="474" x2="791" y2="532" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="791" y1="532" x2="829" y2="532" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="779" y1="762" x2="779" y2="777" stroke="#333" stroke-width="1.5" fill="none"/>
+<polygon points="779,777 771,789 787,789" fill="#333" stroke="#333" stroke-width="1"/>
+<line x1="779" y1="789" x2="791" y2="789" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="791" y1="789" x2="791" y2="847" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="791" y1="847" x2="829" y2="847" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="779" y1="1247" x2="779" y2="1262" stroke="#333" stroke-width="1.5" fill="none"/>
+<polygon points="779,1262 771,1274 787,1274" fill="#333" stroke="#333" stroke-width="1"/>
+<line x1="779" y1="1274" x2="779" y2="1787" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="779" y1="1332" x2="829" y2="1332" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="779" y1="1702" x2="829" y2="1702" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="779" y1="1787" x2="829" y2="1787" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="909" y1="1362" x2="909" y2="1377" stroke="#333" stroke-width="1.5" fill="none"/>
+<polygon points="909,1377 901,1389 917,1389" fill="#333" stroke="#333" stroke-width="1"/>
+<line x1="909" y1="1389" x2="909" y2="1617" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="909" y1="1447" x2="959" y2="1447" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="909" y1="1532" x2="959" y2="1532" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="909" y1="1617" x2="959" y2="1617" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="909" y1="1817" x2="909" y2="1832" stroke="#333" stroke-width="1.5" fill="none"/>
+<polygon points="909,1832 901,1844 917,1844" fill="#333" stroke="#333" stroke-width="1"/>
+<line x1="909" y1="1844" x2="909" y2="1987" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="909" y1="1902" x2="959" y2="1902" stroke="#333" stroke-width="1.5" fill="none"/>
+<line x1="909" y1="1987" x2="959" y2="1987" stroke="#333" stroke-width="1.5" fill="none"/>
+</g>
+</svg>
+    </div>
+    <div class="sentences">
+      <h2>OPL Sentences</h2>
+      <p>Operator is a physical and environmental object.</p>
+      <p>Setting is a physical and systemic process.</p>
+      <p>Pressing is a physical and systemic process.</p>
+      <p>Disengaging is a physical and systemic process.</p>
+      <p>Forcing is a physical and systemic process.</p>
+      <p>Catching is a physical and systemic process.</p>
+      <p>Trap is a physical and systemic object.</p>
+      <p>Trap can be set or sprung.</p>
+      <p>State sprung is initial.</p>
+      <p>Base is a physical and systemic object.</p>
+      <p>Base Staple is a physical and systemic object.</p>
+      <p>Animal is a physical and environmental object.</p>
+      <p>Animal can be free or caught.</p>
+      <p>State free is initial.</p>
+      <p>State caught is final.</p>
+      <p>Trigger is a physical and systemic object.</p>
+      <p>Trigger can be at rest or pressed.</p>
+      <p>State at rest is initial.</p>
+      <p>Catch is a physical and systemic object.</p>
+      <p>Shoulder is a physical and systemic object.</p>
+      <p>Pintle-Eye is a physical and systemic object.</p>
+      <p>Securing-Plates is a physical and systemic object.</p>
+      <p>Pintle is a physical and systemic object.</p>
+      <p>Bait Receptacle is a physical and systemic object.</p>
+      <p>Bait-Opening is a physical and systemic object.</p>
+      <p>Plate is a physical and systemic object.</p>
+      <p>Locking Bar is a physical and systemic object.</p>
+      <p>Locking Bar can be engaged or disengaged.</p>
+      <p>Rear Eye is a physical and systemic object.</p>
+      <p>Transverse Spring is a physical and systemic object.</p>
+      <p>Arm is a physical and systemic object.</p>
+      <p>Inward Extension is a physical and systemic object.</p>
+      <p>Perforated Ears is a physical and systemic object.</p>
+      <p>Jaw is a physical and systemic object.</p>
+      <p>Jaw can be held back or released.</p>
+      <p>Front End is a physical and systemic object.</p>
+      <p>Trap consists of Base, Jaw, Transverse Spring, Locking Bar, Arm, Inward Extension, Perforated Ears, and Trigger.</p>
+      <p>Base consists of Base Staple.</p>
+      <p>Jaw consists of Front End.</p>
+      <p>Locking Bar consists of Rear Eye.</p>
+      <p>Trigger consists of Catch, Pintle, and Bait Receptacle.</p>
+      <p>Catch consists of Shoulder, Pintle-Eye, and Securing-Plates.</p>
+      <p>Bait Receptacle consists of Bait-Opening and Plate.</p>
+      <p>Operator handles Setting.</p>
+      <p>Setting requires Locking Bar.</p>
+      <p>Setting requires Catch.</p>
+      <p>Setting changes Trap from sprung to set.</p>
+      <p>Animal handles Pressing.</p>
+      <p>Pressing requires Trigger.</p>
+      <p>Pressing changes Trigger from at rest to pressed.</p>
+      <p>Pressing invokes Disengaging.</p>
+      <p>Disengaging requires Catch.</p>
+      <p>Disengaging changes Locking Bar from engaged to disengaged.</p>
+      <p>Disengaging changes Trap from set to sprung.</p>
+      <p>Disengaging invokes Forcing.</p>
+      <p>Forcing requires Transverse Spring.</p>
+      <p>Forcing changes Jaw from held back to released.</p>
+      <p>Forcing invokes Catching.</p>
+      <p>Catching requires Front End.</p>
+      <p>Catching changes Animal from free to caught.</p>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span class="legend-item"><span class="swatch-object"></span> object</span>
+    <span class="legend-item"><span class="swatch-process"></span> process</span>
+    <span class="legend-sep"></span>
+    <span class="legend-item"><svg width="26" height="12" viewBox="0 0 26 12"><line x1="1" y1="6" x2="19" y2="6" stroke="#333" stroke-width="1.5"/><circle cx="21" cy="6" r="4" fill="#333"/></svg> agent — handles</span>
+    <span class="legend-item"><svg width="26" height="12" viewBox="0 0 26 12"><line x1="1" y1="6" x2="19" y2="6" stroke="#333" stroke-width="1.5"/><circle cx="21" cy="6" r="4" fill="white" stroke="#333" stroke-width="1.5"/></svg> instrument — requires</span>
+    <span class="legend-item"><svg width="26" height="12" viewBox="0 0 26 12"><line x1="1" y1="6" x2="16" y2="6" stroke="#333" stroke-width="1.5"/><path d="M16 1 L 25 6 L 16 11 Z" fill="white" stroke="#333" stroke-width="1.5"/></svg> effect — changes <span class="legend-note">(diagonal, one shared anchor per relationship)</span></span>
+    <span class="legend-item"><svg width="28" height="12" viewBox="0 0 28 12"><line x1="1" y1="6" x2="14" y2="6" stroke="#333" stroke-width="1.5"/><path d="M14 1 L 19 6 L 14 11 M 21 1 L 26 6 L 21 11" fill="none" stroke="#333" stroke-width="1.5"/></svg> invocation — invokes</span>
+    <span class="legend-sep"></span>
+    <span class="legend-item"><svg width="20" height="14" viewBox="0 0 20 14"><polygon points="10,1 3,12 17,12" fill="#333"/></svg> aggregation — consists of <span class="legend-note">(parts fan out off a spine below the whole)</span></span>
+  </div>
+</main>
+</body>
+</html>

@@ -31,8 +31,8 @@ entities:
     entityType: process
     name: Forcing
     essence: physical
-    affiliation: systemic  
- 
+    affiliation: systemic
+
   - id: catching
     entityType: process
     name: Catching
@@ -52,6 +52,12 @@ entities:
   - id: base
     entityType: object
     name: Base
+    essence: physical
+    affiliation: systemic
+
+  - id: base-staple
+    entityType: object
+    name: Base Staple
     essence: physical
     affiliation: systemic
 
@@ -76,7 +82,53 @@ entities:
         initial: true
       - name: pressed
 
+  - id: catch
+    entityType: object
+    name: Catch
+    essence: physical
+    affiliation: systemic
 
+  - id: shoulder
+    entityType: object
+    name: Shoulder
+    essence: physical
+    affiliation: systemic
+
+  - id: pintle-eye
+    entityType: object
+    name: Pintle-Eye
+    essence: physical
+    affiliation: systemic
+
+  - id: securing-plates
+    entityType: object
+    name: Securing-Plates
+    essence: physical
+    affiliation: systemic
+
+  - id: pintle
+    entityType: object
+    name: Pintle
+    essence: physical
+    affiliation: systemic
+
+  - id: bait-receptacle
+    entityType: object
+    name: Bait Receptacle
+    essence: physical
+    affiliation: systemic
+
+  - id: bait-opening
+    entityType: object
+    name: Bait-Opening
+    essence: physical
+    affiliation: systemic
+
+  - id: plate
+    entityType: object
+    name: Plate
+    essence: physical
+    affiliation: systemic
 
   - id: locking-bar
     entityType: object
@@ -87,9 +139,33 @@ entities:
       - name: engaged
       - name: disengaged
 
+  - id: rear-eye
+    entityType: object
+    name: Rear Eye
+    essence: physical
+    affiliation: systemic
+
   - id: transverse-spring
     entityType: object
     name: Transverse Spring
+    essence: physical
+    affiliation: systemic
+
+  - id: arm
+    entityType: object
+    name: Arm
+    essence: physical
+    affiliation: systemic
+
+  - id: inward-extension
+    entityType: object
+    name: Inward Extension
+    essence: physical
+    affiliation: systemic
+
+  - id: perforated-ears
+    entityType: object
+    name: Perforated Ears
     essence: physical
     affiliation: systemic
 
@@ -102,12 +178,28 @@ entities:
       - name: held back
       - name: released
 
+  - id: front-end
+    entityType: object
+    name: Front End
+    essence: physical
+    affiliation: systemic
+
 relationships:
   # ---- Setting the trap ----
   - id: pr1
     subject: { subjectId: operator }
     target: { targetId: setting }
     relationship: handles
+
+  - id: req3
+    subject: { subjectId: setting }
+    target: { targetId: locking-bar }
+    relationship: requires
+
+  - id: req4
+    subject: { subjectId: setting }
+    target: { targetId: catch }
+    relationship: requires
 
   - id: eff1
     subject: { subjectId: setting }
@@ -136,6 +228,11 @@ relationships:
     relationship: invokes
 
   # ---- Locking bar disengages, trap springs ----
+  - id: req5
+    subject: { subjectId: disengaging }
+    target: { targetId: catch }
+    relationship: requires
+
   - id: eff3
     subject: { subjectId: disengaging }
     target: { targetId: locking-bar, targetState: { targetStateFrom: engaged, targetStateTo: disengaged } }
@@ -168,27 +265,24 @@ relationships:
     relationship: invokes
 
   # ---- Animal is caught ----
+  - id: req6
+    subject: { subjectId: catching }
+    target: { targetId: front-end }
+    relationship: requires
+
   - id: eff6
     subject: { subjectId: catching }
     target: { targetId: animal, targetState: { targetStateFrom: free, targetStateTo: caught } }
     relationship: changes
 
   # ---- Aggregation — Trap (systemic parts only) ----
-  # Stack order follows declaration order here (used by Pressing first,
-  # then Disengaging, then Forcing, then whatever's left).
-  - id: agg5
+  # Stack order follows declaration order here. Shallow single-child parts
+  # first, Trigger last since its subtree is by far the bushiest (Catch +
+  # Pintle + Bait Receptacle, two of which have children of their own) —
+  # keeps it from dominating the top of the comb.
+  - id: agg1
     subject: { subjectId: trap }
-    target: { targetId: trigger }
-    relationship: consists of
-
-  - id: agg4
-    subject: { subjectId: trap }
-    target: { targetId: locking-bar }
-    relationship: consists of
-
-  - id: agg3
-    subject: { subjectId: trap }
-    target: { targetId: transverse-spring }
+    target: { targetId: base }
     relationship: consists of
 
   - id: agg2
@@ -196,7 +290,88 @@ relationships:
     target: { targetId: jaw }
     relationship: consists of
 
-  - id: agg1
+  - id: agg3
     subject: { subjectId: trap }
-    target: { targetId: base }
+    target: { targetId: transverse-spring }
+    relationship: consists of
+
+  - id: agg4
+    subject: { subjectId: trap }
+    target: { targetId: locking-bar }
+    relationship: consists of
+
+  - id: agg6
+    subject: { subjectId: trap }
+    target: { targetId: arm }
+    relationship: consists of
+
+  - id: agg7
+    subject: { subjectId: trap }
+    target: { targetId: inward-extension }
+    relationship: consists of
+
+  - id: agg8
+    subject: { subjectId: trap }
+    target: { targetId: perforated-ears }
+    relationship: consists of
+
+  - id: agg5
+    subject: { subjectId: trap }
+    target: { targetId: trigger }
+    relationship: consists of
+
+  # ---- Aggregation — sub-parts, one layer deeper ----
+  - id: agg9
+    subject: { subjectId: base }
+    target: { targetId: base-staple }
+    relationship: consists of
+
+  - id: agg10
+    subject: { subjectId: jaw }
+    target: { targetId: front-end }
+    relationship: consists of
+
+  - id: agg11
+    subject: { subjectId: locking-bar }
+    target: { targetId: rear-eye }
+    relationship: consists of
+
+  - id: agg12
+    subject: { subjectId: trigger }
+    target: { targetId: catch }
+    relationship: consists of
+
+  - id: agg13
+    subject: { subjectId: trigger }
+    target: { targetId: pintle }
+    relationship: consists of
+
+  - id: agg14
+    subject: { subjectId: trigger }
+    target: { targetId: bait-receptacle }
+    relationship: consists of
+
+  - id: agg15
+    subject: { subjectId: catch }
+    target: { targetId: shoulder }
+    relationship: consists of
+
+  - id: agg16
+    subject: { subjectId: catch }
+    target: { targetId: pintle-eye }
+    relationship: consists of
+
+  - id: agg17
+    subject: { subjectId: catch }
+    target: { targetId: securing-plates }
+    relationship: consists of
+
+  - id: agg18
+    subject: { subjectId: bait-receptacle }
+    target: { targetId: bait-opening }
+    relationship: consists of
+
+  - id: agg19
+    subject: { subjectId: bait-receptacle }
+    target: { targetId: plate }
     relationship: consists of

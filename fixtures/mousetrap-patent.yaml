@@ -1,0 +1,280 @@
+entities:
+  # Environmental agents — declared first since they drive the causal chain
+  - id: operator
+    entityType: object
+    name: Operator
+    essence: physical
+    affiliation: environmental
+
+  - id: animal
+    entityType: object
+    name: Animal
+    essence: physical
+    affiliation: environmental
+    states:
+      - name: free
+        initial: true
+      - name: caught
+        final: true
+
+  - id: bait
+    entityType: object
+    name: Bait
+    essence: physical
+    affiliation: environmental
+
+  # Trap assembly (physical, systemic), flattened to 2 layers under Trap.
+  # Parts ordered by when the causal chain first touches them: Setting-chain
+  # parts, then Triggering-chain parts, then purely structural parts with no
+  # procedural edges last — this order also drives the comb stacking order
+  # (computeClusterLayout follows relationship-declaration order below).
+  - id: trap
+    entityType: object
+    name: Trap
+    essence: physical
+    affiliation: systemic
+    states:
+      - name: sprung
+        initial: true
+      - name: set
+
+  - id: base
+    entityType: object
+    name: Base
+    essence: physical
+    affiliation: systemic
+
+  - id: locking-bar
+    entityType: object
+    name: Locking Bar
+    essence: physical
+    affiliation: systemic
+    states:
+      - name: disengaged
+        initial: true
+      - name: engaged
+
+  - id: catch
+    entityType: object
+    name: Catch
+    essence: physical
+    affiliation: systemic
+    states:
+      - name: released
+        initial: true
+      - name: engaged
+
+  - id: transverse-spring
+    entityType: object
+    name: Transverse Spring
+    essence: physical
+    affiliation: systemic
+
+  - id: jaw
+    entityType: object
+    name: Jaw
+    essence: physical
+    affiliation: systemic
+    states:
+      - name: held back
+      - name: released
+
+  - id: trigger
+    entityType: object
+    name: Trigger
+    essence: physical
+    affiliation: systemic
+    states:
+      - name: at rest
+        initial: true
+      - name: pressed
+
+  - id: bait-receptacle
+    entityType: object
+    name: Bait Receptacle
+    essence: physical
+    affiliation: systemic
+    states:
+      - name: empty
+        initial: true
+      - name: baited
+
+  - id: arm
+    entityType: object
+    name: Arm
+    essence: physical
+    affiliation: systemic
+
+  - id: perforated-ears
+    entityType: object
+    name: Perforated Ears
+    essence: physical
+    affiliation: systemic
+
+  # Processes — in causal order: Baiting, Setting, Triggering (invokes), Springing
+  - id: baiting
+    entityType: process
+    name: Baiting
+    essence: physical
+    affiliation: systemic
+
+  - id: setting
+    entityType: process
+    name: Setting
+    essence: physical
+    affiliation: systemic
+
+  - id: triggering
+    entityType: process
+    name: Triggering
+    essence: physical
+    affiliation: systemic
+
+  - id: springing
+    entityType: process
+    name: Springing
+    essence: physical
+    affiliation: systemic
+
+relationships:
+  # Aggregation — Trap (single layer, no grandchildren). Order matches the
+  # entity order above so the comb stack reads top-to-bottom in causal order,
+  # with the two procedurally-inert parts (Arm, Perforated Ears) stacked last.
+  - id: agg1
+    subject: { subjectId: trap }
+    target: { targetId: base }
+    relationship: consists of
+
+  - id: agg2
+    subject: { subjectId: trap }
+    target: { targetId: locking-bar }
+    relationship: consists of
+
+  - id: agg3
+    subject: { subjectId: trap }
+    target: { targetId: catch }
+    relationship: consists of
+
+  - id: agg4
+    subject: { subjectId: trap }
+    target: { targetId: transverse-spring }
+    relationship: consists of
+
+  - id: agg5
+    subject: { subjectId: trap }
+    target: { targetId: jaw }
+    relationship: consists of
+
+  - id: agg6
+    subject: { subjectId: trap }
+    target: { targetId: trigger }
+    relationship: consists of
+
+  - id: agg7
+    subject: { subjectId: trap }
+    target: { targetId: bait-receptacle }
+    relationship: consists of
+
+  - id: agg8
+    subject: { subjectId: trap }
+    target: { targetId: arm }
+    relationship: consists of
+
+  - id: agg9
+    subject: { subjectId: trap }
+    target: { targetId: perforated-ears }
+    relationship: consists of
+
+  # Baiting
+  - id: bai1
+    subject: { subjectId: operator }
+    target: { targetId: baiting }
+    relationship: handles
+
+  - id: bai2
+    subject: { subjectId: baiting }
+    target: { targetId: bait }
+    relationship: consumes
+
+  - id: bai3
+    subject: { subjectId: baiting }
+    target: { targetId: bait-receptacle, targetState: { targetStateFrom: empty, targetStateTo: baited } }
+    relationship: changes
+
+  # Setting
+  - id: set1
+    subject: { subjectId: operator }
+    target: { targetId: setting }
+    relationship: handles
+
+  - id: set2
+    subject: { subjectId: setting }
+    target: { targetId: locking-bar, targetState: { targetStateFrom: disengaged, targetStateTo: engaged } }
+    relationship: changes
+
+  - id: set3
+    subject: { subjectId: setting }
+    target: { targetId: catch, targetState: { targetStateFrom: released, targetStateTo: engaged } }
+    relationship: changes
+
+  - id: set4
+    subject: { subjectId: setting }
+    target: { targetId: jaw, targetState: { targetStateFrom: released, targetStateTo: held back } }
+    relationship: changes
+
+  - id: set5
+    subject: { subjectId: setting }
+    target: { targetId: trap, targetState: { targetStateFrom: sprung, targetStateTo: set } }
+    relationship: changes
+
+  # Triggering (animal presses trigger → catch releases → locking bar disengages)
+  - id: trg1
+    subject: { subjectId: animal }
+    target: { targetId: triggering }
+    relationship: handles
+
+  - id: trg2
+    subject: { subjectId: triggering }
+    target: { targetId: trigger, targetState: { targetStateFrom: at rest, targetStateTo: pressed } }
+    relationship: changes
+
+  - id: trg3
+    subject: { subjectId: triggering }
+    target: { targetId: catch, targetState: { targetStateFrom: engaged, targetStateTo: released } }
+    relationship: changes
+
+  - id: trg4
+    subject: { subjectId: triggering }
+    target: { targetId: locking-bar, targetState: { targetStateFrom: engaged, targetStateTo: disengaged } }
+    relationship: changes
+
+  - id: trg5
+    subject: { subjectId: triggering }
+    target: { targetId: springing }
+    relationship: invokes
+
+  # Springing (triggered by disengaged Locking Bar → spring forces jaw → animal caught)
+  - id: spr1
+    subject: { subjectId: springing }
+    target: { targetId: locking-bar, targetState: { targetStateAt: disengaged } }
+    relationship: requires
+
+  - id: spr2
+    subject: { subjectId: springing }
+    target: { targetId: transverse-spring }
+    relationship: requires
+
+  - id: spr3
+    subject: { subjectId: springing }
+    target: { targetId: jaw, targetState: { targetStateFrom: held back, targetStateTo: released } }
+    relationship: changes
+
+  - id: spr4
+    subject: { subjectId: springing }
+    target: { targetId: animal, targetState: { targetStateFrom: free, targetStateTo: caught } }
+    relationship: changes
+
+  - id: spr5
+    subject: { subjectId: springing }
+    target: { targetId: trap, targetState: { targetStateFrom: set, targetStateTo: sprung } }
+    relationship: changes

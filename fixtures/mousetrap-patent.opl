@@ -1,0 +1,50 @@
+Operator is a physical and environmental object.
+Animal is a physical and environmental object.
+Animal can be free or caught.
+State free is initial.
+State caught is final.
+Bait is a physical and environmental object.
+Trap is a physical and systemic object.
+Trap can be sprung or set.
+State sprung is initial.
+Base is a physical and systemic object.
+Locking Bar is a physical and systemic object.
+Locking Bar can be disengaged or engaged.
+State disengaged is initial.
+Catch is a physical and systemic object.
+Catch can be released or engaged.
+State released is initial.
+Transverse Spring is a physical and systemic object.
+Jaw is a physical and systemic object.
+Jaw can be held back or released.
+Trigger is a physical and systemic object.
+Trigger can be at rest or pressed.
+State at rest is initial.
+Bait Receptacle is a physical and systemic object.
+Bait Receptacle can be empty or baited.
+State empty is initial.
+Arm is a physical and systemic object.
+Perforated Ears is a physical and systemic object.
+Baiting is a physical and systemic process.
+Setting is a physical and systemic process.
+Triggering is a physical and systemic process.
+Springing is a physical and systemic process.
+Trap consists of Base, Locking Bar, Catch, Transverse Spring, Jaw, Trigger, Bait Receptacle, Arm, and Perforated Ears.
+Operator handles Baiting.
+Baiting consumes Bait.
+Baiting changes Bait Receptacle from empty to baited.
+Operator handles Setting.
+Setting changes Locking Bar from disengaged to engaged.
+Setting changes Catch from released to engaged.
+Setting changes Jaw from released to held back.
+Setting changes Trap from sprung to set.
+Animal handles Triggering.
+Triggering changes Trigger from at rest to pressed.
+Triggering changes Catch from engaged to released.
+Triggering changes Locking Bar from engaged to disengaged.
+Triggering invokes Springing.
+Springing requires Locking Bar at state disengaged.
+Springing requires Transverse Spring.
+Springing changes Jaw from held back to released.
+Springing changes Animal from free to caught.
+Springing changes Trap from set to sprung.

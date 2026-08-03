@@ -20,8 +20,8 @@ import type { LayoutResult, LayoutNode, LayoutState, LayoutEdge, Point } from '.
 import type { Relationship } from './types.js';
 
 const PAD = 40;                // SVG padding around the diagram
-const OBJECT_COLOR = '#70E483';
-const PROCESS_COLOR = '#3BC3FF';
+export const OBJECT_COLOR = '#70E483';
+export const PROCESS_COLOR = '#3BC3FF';
 const FONT = 'Arial, Helvetica, sans-serif';
 const AGG_GAP = 15;            // gap between parent bottom and aggregation triangle
 const TRI_WIDTH = 16;          // aggregation triangle width

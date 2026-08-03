@@ -8,7 +8,6 @@ Trap is a physical and systemic object.
 Trap can be set or sprung.
 State sprung is initial.
 Base is a physical and systemic object.
-Base Staple is a physical and systemic object.
 Animal is a physical and environmental object.
 Animal can be free or caught.
 State free is initial.
@@ -16,45 +15,22 @@ State caught is final.
 Trigger is a physical and systemic object.
 Trigger can be at rest or pressed.
 State at rest is initial.
-Catch is a physical and systemic object.
-Shoulder is a physical and systemic object.
-Pintle-Eye is a physical and systemic object.
-Securing-Plates is a physical and systemic object.
-Pintle is a physical and systemic object.
-Bait Receptacle is a physical and systemic object.
-Bait-Opening is a physical and systemic object.
-Plate is a physical and systemic object.
 Locking Bar is a physical and systemic object.
 Locking Bar can be engaged or disengaged.
-Rear Eye is a physical and systemic object.
 Transverse Spring is a physical and systemic object.
-Arm is a physical and systemic object.
-Inward Extension is a physical and systemic object.
-Perforated Ears is a physical and systemic object.
 Jaw is a physical and systemic object.
 Jaw can be held back or released.
-Front End is a physical and systemic object.
-Trap consists of Base, Jaw, Transverse Spring, Locking Bar, Arm, Inward Extension, Perforated Ears, and Trigger.
-Base consists of Base Staple.
-Jaw consists of Front End.
-Locking Bar consists of Rear Eye.
-Trigger consists of Catch, Pintle, and Bait Receptacle.
-Catch consists of Shoulder, Pintle-Eye, and Securing-Plates.
-Bait Receptacle consists of Bait-Opening and Plate.
+Trap consists of Trigger, Locking Bar, Transverse Spring, Jaw, and Base.
 Operator handles Setting.
-Setting requires Locking Bar.
-Setting requires Catch.
 Setting changes Trap from sprung to set.
 Animal handles Pressing.
 Pressing requires Trigger.
 Pressing changes Trigger from at rest to pressed.
 Pressing invokes Disengaging.
-Disengaging requires Catch.
 Disengaging changes Locking Bar from engaged to disengaged.
 Disengaging changes Trap from set to sprung.
 Disengaging invokes Forcing.
 Forcing requires Transverse Spring.
 Forcing changes Jaw from held back to released.
 Forcing invokes Catching.
-Catching requires Front End.
 Catching changes Animal from free to caught.

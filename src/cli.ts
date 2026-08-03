@@ -1,10 +1,12 @@
 import { readFileSync, writeFileSync } from 'fs';
+import { basename } from 'path';
 import { parse } from 'yaml';
 import type { OpmModel } from './types.js';
 import { validate } from './validate.js';
 import { computeLayout } from './layout.js';
 import { renderSvg } from './svg.js';
 import { generateOplSentences } from './opl-sentences.js';
+import { renderHtml } from './html.js';
 
 async function main() {
   const args = process.argv.slice(2);
@@ -42,6 +44,11 @@ async function main() {
   const oplPath = outputPath.replace(/\.svg$/i, '.opl');
   writeFileSync(oplPath, oplSentences.join('\n') + '\n', 'utf-8');
   console.log(`Wrote ${oplPath}`);
+
+  const htmlPath = outputPath.replace(/\.svg$/i, '.html');
+  const html = renderHtml(svg, oplSentences, model, layout, basename(htmlPath));
+  writeFileSync(htmlPath, html, 'utf-8');
+  console.log(`Wrote ${htmlPath}`);
 
   console.log('\nOPL Sentences:');
   for (const s of oplSentences) {
