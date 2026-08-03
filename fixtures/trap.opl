@@ -1,0 +1,78 @@
+Trap is a physical and systemic object.
+Trap can be set or sprung.
+State sprung is initial.
+Base is a physical and systemic object.
+Jaw is a physical and systemic object.
+Jaw can be held back or released.
+Transverse Spring is a physical and systemic object.
+Transverse Spring can be tensioned or relaxed.
+Arm is a physical and systemic object.
+Inward Extension is a physical and systemic object.
+Perforated Ears is a physical and systemic object.
+Locking Bar is a physical and systemic object.
+Locking Bar can be engaged or disengaged.
+Trigger is a physical and systemic object.
+Trigger can be at rest or pressed.
+State at rest is initial.
+Pintle is a physical and systemic object.
+Staple Pintle is a physical and systemic object.
+Shank Pintle is a physical and systemic object.
+Catch is a physical and systemic object.
+Catch can be engaged or released.
+Front End is a physical and systemic object.
+Shoulder is a physical and systemic object.
+Pintle-Eye is a physical and systemic object.
+Securing-Plates is a physical and systemic object.
+Base Staple is a physical and systemic object.
+Rear Eye is a physical and systemic object.
+Shank is a physical and systemic object.
+Material is a physical and systemic object.
+Shape is an informatical and systemic object.
+Animal is a physical and environmental object.
+Animal can be free or caught.
+State free is initial.
+State caught is final.
+Operator is a physical and environmental object.
+Setting is an informatical and systemic process.
+Springing is an informatical and systemic process.
+Pressing is an informatical and systemic process.
+Releasing is an informatical and systemic process.
+Disengaging is an informatical and systemic process.
+Forcing is an informatical and systemic process.
+Catching is an informatical and systemic process.
+Trap consists of Base, Jaw, Transverse Spring, Arm, Inward Extension, Perforated Ears, Locking Bar, Trigger, and Pintle.
+Jaw consists of Front End.
+Perforated Ears consists of Shank.
+Locking Bar consists of Rear Eye.
+Trigger consists of Catch.
+Catch consists of Shoulder, Pintle-Eye, and Securing-Plates.
+Base consists of Base Staple.
+Staple Pintle is a Pintle.
+Shank Pintle is a Pintle.
+Base exhibits Material.
+Front End exhibits Shape.
+Operator handles Setting.
+Setting requires Locking Bar.
+Setting requires Catch.
+Setting changes Trap from sprung to set.
+Animal handles Springing.
+Springing changes Trap from set to sprung.
+Springing changes Animal from free to caught.
+Springing invokes Pressing.
+Springing invokes Releasing.
+Springing invokes Disengaging.
+Springing invokes Forcing.
+Springing invokes Catching.
+Animal handles Pressing.
+Pressing changes Trigger from at rest to pressed.
+Releasing requires Trigger at state pressed.
+Releasing changes Catch from engaged to released.
+Disengaging requires Catch at state released.
+Disengaging changes Locking Bar from engaged to disengaged.
+Forcing requires Locking Bar at state disengaged.
+Forcing requires Transverse Spring.
+Forcing changes Transverse Spring from tensioned to relaxed.
+Forcing changes Jaw from held back to released.
+Catching requires Jaw at state released.
+Catching requires Front End.
+Catching changes Animal from free to caught.

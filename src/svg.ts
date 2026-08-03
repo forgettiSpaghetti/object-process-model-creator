@@ -7,8 +7,10 @@
  *   - State rounded-rects nested inside objects
  *   - Orthogonal edge routing with state-targeted endpoints
  *   - Comb-style aggregation (triangle + horizontal bar + vertical stubs)
- *   - Z-shaped kink on invocation links
- *   - Semicircular line jumps at edge crossings
+ *   - Semicircular line jumps at edge crossings (the single, consistent
+ *     crossing-decoration convention — invocation links are distinguished
+ *     from other procedural links only by their open arrowhead, matching
+ *     the reference notation, so no second "kink" glyph competes with it)
  */
 import type { LayoutResult, LayoutNode, LayoutState, LayoutEdge, Point } from './layout.js';
 import type { Relationship } from './types.js';
@@ -20,9 +22,8 @@ const FONT = 'Arial, Helvetica, sans-serif';
 const AGG_GAP = 15;            // gap between parent bottom and aggregation triangle
 const TRI_WIDTH = 16;          // aggregation triangle width
 const TRI_HEIGHT = 12;         // aggregation triangle height
-const JUMP_R = 5;              // radius of semicircular line jumps at crossings
-const Z_H = 6;                 // half-height of Z-kink on invocation links
-const Z_W = 8;                 // half-width of Z-kink
+const JUMP_R = 7;              // radius of semicircular line jumps at crossings (>= 4x stroke width)
+const MIN_CLEARANCE = 12;      // minimum gap kept between independently-drawn parallel segments
 
 /** Render a complete OPD as an SVG string. */
 export function renderSvg(layout: LayoutResult): string {
@@ -52,16 +53,13 @@ export function renderSvg(layout: LayoutResult): string {
 
   const edgeInfos: { points: Point[]; stroke: string; markerStart: string; markerEnd: string }[] = [];
   for (const edge of otherEdges) {
-    let points = computeEdgePoints(edge, layout);
+    const points = computeEdgePoints(edge, layout);
     if (points.length < 2) continue;
 
     const rel = edge.link.relationship;
-    const markers = edgeMarkers(rel, edge.id);
+    const sourceIsProcess = isProcessEntity(edge.sourceId, layout);
+    const markers = edgeMarkers(rel, edge.id, sourceIsProcess);
     const stroke = edgeStroke(rel, edge.id);
-
-    if (rel === 'invokes') {
-      points = insertZKink(points);
-    }
 
     edgeInfos.push({ points, stroke, markerStart: markers.start, markerEnd: markers.end });
   }
@@ -77,8 +75,9 @@ export function renderSvg(layout: LayoutResult): string {
     );
   }
 
+  const obstacles = edgeInfos.flatMap(e => horizontalSegments(e.points));
   for (const [, edges] of aggGroups) {
-    parts.push(renderAggregationGroup(edges, layout));
+    parts.push(renderAggregationGroup(edges, layout, obstacles));
   }
 
   parts.push('</g>');
@@ -102,10 +101,6 @@ function defs(): string {
   <marker id="hollow-circle" viewBox="0 0 10 10" refX="5" refY="5"
     markerWidth="8" markerHeight="8" orient="auto">
     <circle cx="5" cy="5" r="4" fill="white" stroke="#333" stroke-width="1.5"/>
-  </marker>
-  <marker id="filled-triangle" viewBox="0 0 10 10" refX="0" refY="5"
-    markerWidth="10" markerHeight="10" orient="auto">
-    <path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/>
   </marker>
   <marker id="hollow-triangle" viewBox="0 0 10 10" refX="10" refY="5"
     markerWidth="10" markerHeight="10" orient="auto">
@@ -185,29 +180,46 @@ function renderState(st: LayoutState, parent: LayoutNode): string {
   ].filter(Boolean).join('\n');
 }
 
-function edgeMarkers(rel: Relationship, edgeId: string): { start: string; end: string } {
+/**
+ * Placement is keyed off OPM role (which endpoint is the process), not off
+ * which side happens to be the YAML `subject`/`target` — a link authored
+ * `object -> process` and one authored `process -> object` must render
+ * identically for a given relationship type.
+ */
+function edgeMarkers(rel: Relationship, edgeId: string, sourceIsProcess: boolean): { start: string; end: string } {
   switch (rel) {
-    case 'handles':
-      return { start: '', end: 'marker-end="url(#filled-circle)"' };
-    case 'requires':
-      return { start: '', end: 'marker-end="url(#hollow-circle)"' };
-    case 'yields':
-      return { start: '', end: 'marker-end="url(#arrow)"' };
-    case 'consumes':
-      return { start: '', end: 'marker-end="url(#arrow)"' };
-    case 'consists of':
-      return { start: 'marker-start="url(#filled-triangle)"', end: '' };
+    case 'handles': // agent link: filled circle at the process
+      return circleAtProcess('filled-circle', sourceIsProcess);
+    case 'requires': // instrument link: hollow circle at the process
+      return circleAtProcess('hollow-circle', sourceIsProcess);
+    case 'consumes': // consumption link: solid arrow into the process
+      return sourceIsProcess
+        ? { start: 'marker-start="url(#arrow)"', end: '' }
+        : { start: '', end: 'marker-end="url(#arrow)"' };
+    case 'yields': // result link: solid arrow into the object
+      return sourceIsProcess
+        ? { start: '', end: 'marker-end="url(#arrow)"' }
+        : { start: 'marker-start="url(#arrow)"', end: '' };
     case 'invokes':
       return { start: '', end: 'marker-end="url(#hollow-arrow)"' };
     case 'is a':
       return { start: '', end: 'marker-end="url(#hollow-triangle)"' };
-    case 'changes':
-      if (edgeId.endsWith('-from')) return { start: '', end: 'marker-end="url(#arrow)"' };
-      if (edgeId.endsWith('-to')) return { start: '', end: 'marker-end="url(#arrow)"' };
-      return { start: '', end: 'marker-end="url(#arrow)"' };
+    case 'changes': // effect/consumption/result: open outline arrowhead per the target style
+      return { start: '', end: 'marker-end="url(#hollow-arrow)"' };
     default:
       return { start: '', end: 'marker-end="url(#arrow)"' };
   }
+}
+
+function circleAtProcess(glyph: 'filled-circle' | 'hollow-circle', sourceIsProcess: boolean): { start: string; end: string } {
+  return sourceIsProcess
+    ? { start: `marker-start="url(#${glyph})"`, end: '' }
+    : { start: '', end: `marker-end="url(#${glyph})"` };
+}
+
+function isProcessEntity(id: string, layout: LayoutResult): boolean {
+  const node = layout.nodes.find(n => n.id === id);
+  return node?.entity.entityType === 'process';
 }
 
 function edgeStroke(_rel: Relationship, _edgeId: string): string {
@@ -254,73 +266,23 @@ function computeEdgePoints(edge: LayoutEdge, layout: LayoutResult): Point[] {
   }
 
   if (edge.sourceState && points.length >= 2) {
-    const stateTop = findStateTopCenter(edge.sourceState, layout);
-    if (stateTop) {
-      const secondY = points[1].y;
-      points.splice(0, 1, stateTop, { x: stateTop.x, y: secondY });
+    const secondY = points[1].y;
+    const stateBorder = findStateBorderCenter(edge.sourceState, layout, secondY);
+    if (stateBorder) {
+      points.splice(0, 1, stateBorder, { x: stateBorder.x, y: secondY });
     }
   }
 
   if (edge.targetState && points.length >= 2) {
-    const stateTop = findStateTopCenter(edge.targetState, layout);
-    if (stateTop) {
-      const n = points.length;
-      const prevY = points[n - 2].y;
-      points.splice(n - 1, 1, { x: stateTop.x, y: prevY }, stateTop);
+    const n = points.length;
+    const prevY = points[n - 2].y;
+    const stateBorder = findStateBorderCenter(edge.targetState, layout, prevY);
+    if (stateBorder) {
+      points.splice(n - 1, 1, { x: stateBorder.x, y: prevY }, stateBorder);
     }
   }
 
   return cleanPath(points);
-}
-
-function insertZKink(points: Point[]): Point[] {
-  let totalLen = 0;
-  for (let i = 1; i < points.length; i++) {
-    const dx = points[i].x - points[i - 1].x;
-    const dy = points[i].y - points[i - 1].y;
-    totalLen += Math.sqrt(dx * dx + dy * dy);
-  }
-
-  const half = totalLen / 2;
-  let cumLen = 0;
-  for (let i = 1; i < points.length; i++) {
-    const dx = points[i].x - points[i - 1].x;
-    const dy = points[i].y - points[i - 1].y;
-    const segLen = Math.sqrt(dx * dx + dy * dy);
-
-    if (cumLen + segLen >= half && segLen > Z_H * 4) {
-      const t = (half - cumLen) / segLen;
-      const midX = points[i - 1].x + t * dx;
-      const midY = points[i - 1].y + t * dy;
-
-      const isVertical = Math.abs(dy) > Math.abs(dx);
-      const result = [...points.slice(0, i)];
-
-      if (isVertical) {
-        const dirY = dy > 0 ? 1 : -1;
-        result.push(
-          { x: midX, y: midY - Z_H * dirY },
-          { x: midX + Z_W, y: midY - Z_H * dirY },
-          { x: midX - Z_W, y: midY + Z_H * dirY },
-          { x: midX, y: midY + Z_H * dirY },
-        );
-      } else {
-        const dirX = dx > 0 ? 1 : -1;
-        result.push(
-          { x: midX - Z_H * dirX, y: midY },
-          { x: midX - Z_H * dirX, y: midY - Z_W },
-          { x: midX + Z_H * dirX, y: midY + Z_W },
-          { x: midX + Z_H * dirX, y: midY },
-        );
-      }
-
-      result.push(...points.slice(i));
-      return result;
-    }
-    cumLen += segLen;
-  }
-
-  return points;
 }
 
 function segmentIntersect(a1: Point, a2: Point, b1: Point, b2: Point): Point | null {
@@ -342,6 +304,13 @@ function segmentIntersect(a1: Point, a2: Point, b1: Point, b2: Point): Point | n
   return null;
 }
 
+/**
+ * Ownership at each crossing is deterministic given a fixed edge order: the
+ * horizontal segment hops over the vertical one (standard line-jump
+ * convention); when both segments share the same orientation, the
+ * later-drawn edge (higher index) hops. Same input always yields the same
+ * hop assignment.
+ */
 function detectJumps(allPaths: Point[][]): Map<number, Point[]> {
   const result = new Map<number, Point[]>();
 
@@ -436,7 +405,24 @@ function buildPathWithJumps(points: Point[], jumps: Point[]): string {
   return d;
 }
 
-function renderAggregationGroup(edges: LayoutEdge[], layout: LayoutResult): string {
+interface HSegment { y: number; x1: number; x2: number }
+
+/** Extracts the horizontal runs of a routed edge path, used to keep the
+ * hand-drawn aggregation comb (which ELK never sees) out of channels that
+ * ELK already assigned to procedural edges. */
+function horizontalSegments(points: Point[]): HSegment[] {
+  const segs: HSegment[] = [];
+  for (let i = 1; i < points.length; i++) {
+    const p1 = points[i - 1];
+    const p2 = points[i];
+    if (Math.abs(p1.y - p2.y) < 0.5) {
+      segs.push({ y: p1.y, x1: Math.min(p1.x, p2.x), x2: Math.max(p1.x, p2.x) });
+    }
+  }
+  return segs;
+}
+
+function renderAggregationGroup(edges: LayoutEdge[], layout: LayoutResult, obstacles: HSegment[]): string {
   const parts: string[] = [];
   const stroke = edgeStroke('consists of', '');
   const sourceId = edges[0].sourceId;
@@ -455,7 +441,7 @@ function renderAggregationGroup(edges: LayoutEdge[], layout: LayoutResult): stri
   );
 
   parts.push(
-    `<polygon points="${trunkX - TRI_WIDTH / 2},${triTopY} ${trunkX + TRI_WIDTH / 2},${triTopY} ${trunkX},${triBottomY}" fill="#333" stroke="#333" stroke-width="1"/>`,
+    `<polygon points="${trunkX},${triTopY} ${trunkX - TRI_WIDTH / 2},${triBottomY} ${trunkX + TRI_WIDTH / 2},${triBottomY}" fill="#333" stroke="#333" stroke-width="1"/>`,
   );
 
   const targetInfos: { tgtId: string; center: Point; topY: number }[] = [];
@@ -467,16 +453,32 @@ function renderAggregationGroup(edges: LayoutEdge[], layout: LayoutResult): stri
   }
   if (targetInfos.length === 0) return parts.join('\n');
 
-  const barY = Math.min(...targetInfos.map(t => t.topY)) - 10;
-
-  parts.push(
-    `<line x1="${trunkX}" y1="${triBottomY}" x2="${trunkX}" y2="${barY}" ${stroke} fill="none"/>`,
-  );
-
   const childXs = targetInfos.map(t => t.center.x);
   childXs.push(trunkX);
   const barLeft = Math.min(...childXs);
   const barRight = Math.max(...childXs);
+
+  // Start as close to the children as possible, then walk the bar upward
+  // (away from the whole) in small steps until it clears any procedural edge
+  // segment that overlaps its x-span — otherwise the bar can land exactly on
+  // top of an unrelated edge's horizontal jog. The available window between
+  // the triangle and the first child row is often tight, so search finely
+  // rather than jumping by a full clearance unit and overshooting the room
+  // that exists.
+  const naiveBarY = Math.min(...targetInfos.map(t => t.topY)) - 10;
+  const minBarY = triBottomY + 2;
+  const collides = (y: number) => obstacles.some(o =>
+    Math.abs(o.y - y) < MIN_CLEARANCE && o.x1 < barRight && o.x2 > barLeft,
+  );
+  const STEP = 4;
+  let barY = naiveBarY;
+  while (barY - STEP >= minBarY && collides(barY)) {
+    barY -= STEP;
+  }
+
+  parts.push(
+    `<line x1="${trunkX}" y1="${triBottomY}" x2="${trunkX}" y2="${barY}" ${stroke} fill="none"/>`,
+  );
 
   parts.push(
     `<line x1="${barLeft}" y1="${barY}" x2="${barRight}" y2="${barY}" ${stroke} fill="none"/>`,
@@ -542,11 +544,19 @@ function findCenter(id: string, layout: LayoutResult): Point | null {
   return null;
 }
 
-function findStateTopCenter(stateId: string, layout: LayoutResult): Point | null {
+/**
+ * Anchors on whichever horizontal facet of the state box faces `towardY`, so
+ * a link to a process below the state exits through the state's bottom
+ * instead of always through the top and slicing through the parent object.
+ */
+function findStateBorderCenter(stateId: string, layout: LayoutResult, towardY: number): Point | null {
   for (const n of layout.nodes) {
     for (const s of n.children) {
       if (s.id === stateId) {
-        return { x: n.x + s.x + s.width / 2, y: n.y + s.y };
+        const absTop = n.y + s.y;
+        const cy = absTop + s.height / 2;
+        const y = towardY < cy ? absTop : absTop + s.height;
+        return { x: n.x + s.x + s.width / 2, y };
       }
     }
   }

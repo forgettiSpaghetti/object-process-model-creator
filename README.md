@@ -20,6 +20,11 @@ npm run build
 node dist/cli.js fixtures/simple.yaml
 # → fixtures/simple.svg   (diagram)
 # → fixtures/simple.opl   (OPL sentences)
+
+# Open the diagram in your browser
+open fixtures/simple.svg       # macOS
+# xdg-open fixtures/simple.svg  # Linux
+# start fixtures/simple.svg     # Windows
 ```
 
 Or during development:

@@ -1,0 +1,435 @@
+entities:
+  # Objects — all physical, all systemic unless noted
+  - id: trap
+    entityType: object
+    name: Trap
+    essence: physical
+    affiliation: systemic
+
+  - id: base
+    entityType: object
+    name: Base
+    essence: physical
+    affiliation: systemic
+
+  - id: jaw
+    entityType: object
+    name: Jaw
+    essence: physical
+    affiliation: systemic
+    states:
+      - name: held back
+      - name: released
+
+  - id: transverse-spring
+    entityType: object
+    name: Transverse Spring
+    essence: physical
+    affiliation: systemic
+    states:
+      - name: tensioned
+      - name: relaxed
+
+  - id: arm
+    entityType: object
+    name: Arm
+    essence: physical
+    affiliation: systemic
+
+  - id: inward-extension
+    entityType: object
+    name: Inward Extension
+    essence: physical
+    affiliation: systemic
+
+  - id: perforated-ears
+    entityType: object
+    name: Perforated Ears
+    essence: physical
+    affiliation: systemic
+
+  - id: locking-bar
+    entityType: object
+    name: Locking Bar
+    essence: physical
+    affiliation: systemic
+    states:
+      - name: engaged
+      - name: disengaged
+
+  - id: trigger
+    entityType: object
+    name: Trigger
+    essence: physical
+    affiliation: systemic
+    states:
+      - name: at rest
+        initial: true
+      - name: pressed
+
+  - id: pintle
+    entityType: object
+    name: Pintle
+    essence: physical
+    affiliation: systemic
+
+  - id: staple-pintle
+    entityType: object
+    name: Staple Pintle
+    essence: physical
+    affiliation: systemic
+
+  - id: shank-pintle
+    entityType: object
+    name: Shank Pintle
+    essence: physical
+    affiliation: systemic
+
+  - id: catch
+    entityType: object
+    name: Catch
+    essence: physical
+    affiliation: systemic
+    states:
+      - name: engaged
+      - name: released
+
+  - id: front-end
+    entityType: object
+    name: Front End
+    essence: physical
+    affiliation: systemic
+
+  - id: shoulder
+    entityType: object
+    name: Shoulder
+    essence: physical
+    affiliation: systemic
+
+  - id: pintle-eye
+    entityType: object
+    name: Pintle-Eye
+    essence: physical
+    affiliation: systemic
+
+  - id: securing-plates
+    entityType: object
+    name: Securing-Plates
+    essence: physical
+    affiliation: systemic
+
+  - id: base-staple
+    entityType: object
+    name: Base Staple
+    essence: physical
+    affiliation: systemic
+
+  - id: rear-eye
+    entityType: object
+    name: Rear Eye
+    essence: physical
+    affiliation: systemic
+
+  - id: shank
+    entityType: object
+    name: Shank
+    essence: physical
+    affiliation: systemic
+
+  - id: material
+    entityType: object
+    name: Material
+    essence: physical
+    affiliation: systemic
+
+  - id: shape
+    entityType: object
+    name: Shape
+    essence: informatical
+    affiliation: systemic
+
+  - id: animal
+    entityType: object
+    name: Animal
+    essence: physical
+    affiliation: environmental
+    states:
+      - name: free
+        initial: true
+      - name: caught
+        final: true
+
+  - id: operator
+    entityType: object
+    name: Operator
+    essence: physical
+    affiliation: environmental
+
+  # Processes
+  - id: setting
+    entityType: process
+    name: Setting
+    essence: physical
+    affiliation: systemic
+
+  - id: springing
+    entityType: process
+    name: Springing
+    essence: physical
+    affiliation: systemic
+
+  - id: pressing
+    entityType: process
+    name: Pressing
+    essence: physical
+    affiliation: systemic
+
+  - id: disengaging
+    entityType: process
+    name: Disengaging
+    essence: physical
+    affiliation: systemic
+
+  - id: forcing
+    entityType: process
+    name: Forcing
+    essence: physical
+    affiliation: systemic
+
+  - id: catching
+    entityType: process
+    name: Catching
+    essence: physical
+    affiliation: systemic
+
+relationships:
+  # Generalization
+  - id: gen1
+    subject: { subjectId: staple-pintle }
+    target: { targetId: pintle }
+    relationship: is a
+
+  - id: gen2
+    subject: { subjectId: shank-pintle }
+    target: { targetId: pintle }
+    relationship: is a
+
+  # Aggregation — Trap
+  - id: agg1
+    subject: { subjectId: trap }
+    target: { targetId: base }
+    relationship: consists of
+
+  - id: agg2
+    subject: { subjectId: trap }
+    target: { targetId: jaw }
+    relationship: consists of
+
+  - id: agg3
+    subject: { subjectId: trap }
+    target: { targetId: transverse-spring }
+    relationship: consists of
+
+  - id: agg4
+    subject: { subjectId: trap }
+    target: { targetId: arm }
+    relationship: consists of
+
+  - id: agg5
+    subject: { subjectId: trap }
+    target: { targetId: inward-extension }
+    relationship: consists of
+
+  - id: agg6
+    subject: { subjectId: trap }
+    target: { targetId: perforated-ears }
+    relationship: consists of
+
+  - id: agg7
+    subject: { subjectId: trap }
+    target: { targetId: locking-bar }
+    relationship: consists of
+
+  - id: agg8
+    subject: { subjectId: trap }
+    target: { targetId: trigger }
+    relationship: consists of
+
+  - id: agg9
+    subject: { subjectId: trap }
+    target: { targetId: pintle }
+    relationship: consists of
+
+  # Aggregation — sub-parts
+  - id: agg10
+    subject: { subjectId: jaw }
+    target: { targetId: front-end }
+    relationship: consists of
+
+  - id: agg11
+    subject: { subjectId: perforated-ears }
+    target: { targetId: shank }
+    relationship: consists of
+
+  - id: agg12
+    subject: { subjectId: locking-bar }
+    target: { targetId: rear-eye }
+    relationship: consists of
+
+  - id: agg13
+    subject: { subjectId: trigger }
+    target: { targetId: catch }
+    relationship: consists of
+
+  - id: agg14
+    subject: { subjectId: catch }
+    target: { targetId: shoulder }
+    relationship: consists of
+
+  - id: agg15
+    subject: { subjectId: catch }
+    target: { targetId: pintle-eye }
+    relationship: consists of
+
+  - id: agg16
+    subject: { subjectId: catch }
+    target: { targetId: securing-plates }
+    relationship: consists of
+
+  - id: agg17
+    subject: { subjectId: base }
+    target: { targetId: base-staple }
+    relationship: consists of
+
+  # Setting (top-level)
+  - id: set1
+    subject: { subjectId: operator }
+    target: { targetId: setting }
+    relationship: handles
+
+  - id: set2
+    subject: { subjectId: setting }
+    target: { targetId: locking-bar }
+    relationship: requires
+
+  - id: set3
+    subject: { subjectId: setting }
+    target: { targetId: catch }
+    relationship: requires
+
+  - id: set4
+    subject: { subjectId: setting }
+    target: { targetId: trap, targetState: { targetStateFrom: sprung, targetStateTo: set } }
+    relationship: changes
+
+  # Springing (top-level)
+  - id: spr1
+    subject: { subjectId: animal }
+    target: { targetId: springing }
+    relationship: handles
+
+  - id: spr2
+    subject: { subjectId: springing }
+    target: { targetId: trap, targetState: { targetStateFrom: set, targetStateTo: sprung } }
+    relationship: changes
+
+  - id: spr3
+    subject: { subjectId: springing }
+    target: { targetId: animal, targetState: { targetStateFrom: free, targetStateTo: caught } }
+    relationship: changes
+
+  # Springing zooms into (approximated as invokes)
+  - id: zoom1
+    subject: { subjectId: springing }
+    target: { targetId: pressing }
+    relationship: invokes
+
+  - id: zoom2
+    subject: { subjectId: springing }
+    target: { targetId: releasing }
+    relationship: invokes
+
+  - id: zoom3
+    subject: { subjectId: springing }
+    target: { targetId: disengaging }
+    relationship: invokes
+
+  - id: zoom4
+    subject: { subjectId: springing }
+    target: { targetId: forcing }
+    relationship: invokes
+
+  - id: zoom5
+    subject: { subjectId: springing }
+    target: { targetId: catching }
+    relationship: invokes
+
+  # Pressing
+  - id: pr1
+    subject: { subjectId: animal }
+    target: { targetId: pressing }
+    relationship: handles
+
+  - id: pr2
+    subject: { subjectId: pressing }
+    target: { targetId: trigger, targetState: { targetStateFrom: at rest, targetStateTo: pressed } }
+    relationship: changes
+
+  # Releasing ("triggered by pressed Trigger" → requires Trigger at state pressed)
+  - id: rel1
+    subject: { subjectId: releasing }
+    target: { targetId: trigger, targetState: { targetStateAt: pressed } }
+    relationship: requires
+
+  - id: rel2
+    subject: { subjectId: releasing }
+    target: { targetId: catch, targetState: { targetStateFrom: engaged, targetStateTo: released } }
+    relationship: changes
+
+  # Disengaging ("triggered by released Catch" → requires Catch at state released)
+  - id: dis1
+    subject: { subjectId: disengaging }
+    target: { targetId: catch, targetState: { targetStateAt: released } }
+    relationship: requires
+
+  - id: dis2
+    subject: { subjectId: disengaging }
+    target: { targetId: locking-bar, targetState: { targetStateFrom: engaged, targetStateTo: disengaged } }
+    relationship: changes
+
+  # Forcing ("triggered by disengaged Locking Bar" → requires Locking Bar at state disengaged)
+  - id: frc1
+    subject: { subjectId: forcing }
+    target: { targetId: locking-bar, targetState: { targetStateAt: disengaged } }
+    relationship: requires
+
+  - id: frc2
+    subject: { subjectId: forcing }
+    target: { targetId: transverse-spring }
+    relationship: requires
+
+  - id: frc3
+    subject: { subjectId: forcing }
+    target: { targetId: transverse-spring, targetState: { targetStateFrom: tensioned, targetStateTo: relaxed } }
+    relationship: changes
+
+  - id: frc4
+    subject: { subjectId: forcing }
+    target: { targetId: jaw, targetState: { targetStateFrom: held back, targetStateTo: released } }
+    relationship: changes
+
+  # Catching ("triggered by released Jaw" → requires Jaw at state released)
+  - id: cat1
+    subject: { subjectId: catching }
+    target: { targetId: jaw, targetState: { targetStateAt: released } }
+    relationship: requires
+
+  - id: cat2
+    subject: { subjectId: catching }
+    target: { targetId: front-end }
+    relationship: requires
+
+  - id: cat3
+    subject: { subjectId: catching }
+    target: { targetId: animal, targetState: { targetStateFrom: free, targetStateTo: caught } }
+    relationship: changes

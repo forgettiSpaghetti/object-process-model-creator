@@ -133,7 +133,16 @@ export async function computeLayout(model: OpmModel): Promise<LayoutResult> {
       continue;
     }
 
-    elkEdges.push({ id: rel.id, sources: [sourceId], targets: [targetId] });
+    elkEdges.push({
+      id: rel.id,
+      sources: [sourceId],
+      targets: [targetId],
+      // Aggregation edges are rendered as a hand-drawn comb, not ELK's routed
+      // path, but they still influence layering: prioritizing them keeps
+      // parts pulled close to their whole instead of scattered across
+      // whatever layer the rest of the process graph happens to push them to.
+      ...(rel.relationship === 'consists of' ? { layoutOptions: { 'elk.priority': '10' } } : {}),
+    });
 
     const info: { sourceState?: string; targetState?: string } = {};
     if (rel.subject.subjectState) {
@@ -153,12 +162,19 @@ export async function computeLayout(model: OpmModel): Promise<LayoutResult> {
       'elk.algorithm': 'layered',
       'elk.direction': 'DOWN',
       'elk.spacing.nodeNode': '60',
-      'elk.spacing.edgeNode': '30',
+      'elk.spacing.edgeNode': '36',
       'elk.layered.spacing.nodeNodeBetweenLayers': '80',
       'elk.layered.crossingMinimization.strategy': 'LAYER_SWEEP',
+      'elk.layered.nodePlacement.strategy': 'NETWORK_SIMPLEX',
+      // Post-layering compaction pulls nodes toward shorter edges instead of
+      // leaving them spread across the full width of their layer — reduces
+      // canvas sprawl and wasted whitespace without touching the routing.
+      'elk.layered.compaction.postCompaction.strategy': 'EDGE_LENGTH',
       'elk.edgeRouting': 'ORTHOGONAL',
-      'elk.spacing.edgeEdge': '15',
-      'elk.layered.spacing.edgeEdgeBetweenLayers': '20',
+      // Wider edge-to-edge and edge-to-node channels so parallel runs don't
+      // collapse into a near-coincident single stroke.
+      'elk.spacing.edgeEdge': '22',
+      'elk.layered.spacing.edgeEdgeBetweenLayers': '28',
     },
     children: elkChildren,
     edges: elkEdges,

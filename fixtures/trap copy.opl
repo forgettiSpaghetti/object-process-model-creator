@@ -1,0 +1,37 @@
+Trap is a physical and systemic object.
+Trap can be set or sprung.
+State sprung is initial.
+Base is a physical and systemic object.
+Jaw is a physical and systemic object.
+Jaw can be held back or released.
+Transverse Spring is a physical and systemic object.
+Locking Bar is a physical and systemic object.
+Locking Bar can be engaged or disengaged.
+Trigger is a physical and systemic object.
+Trigger can be at rest or pressed.
+State at rest is initial.
+Animal is a physical and environmental object.
+Animal can be free or caught.
+State free is initial.
+State caught is final.
+Operator is a physical and environmental object.
+Setting is a physical and systemic process.
+Springing is a physical and systemic process.
+Pressing is a physical and systemic process.
+Disengaging is a physical and systemic process.
+Forcing is a physical and systemic process.
+Catching is a physical and systemic process.
+Trap consists of Base, Jaw, Transverse Spring, Locking Bar, and Trigger.
+Operator handles Setting.
+Animal handles Pressing.
+Pressing invokes Disengaging.
+Disengaging invokes Forcing.
+Forcing invokes Catching.
+Pressing requires Trigger.
+Forcing requires Transverse Spring.
+Setting changes Trap from sprung to set.
+Pressing changes Trigger from at rest to pressed.
+Disengaging changes Locking Bar from engaged to disengaged.
+Disengaging changes Trap from set to sprung.
+Forcing changes Jaw from held back to released.
+Catching changes Animal from free to caught.
